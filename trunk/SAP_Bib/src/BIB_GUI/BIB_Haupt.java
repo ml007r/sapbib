@@ -28,7 +28,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	public BIB_Haupt(){
 		super();
 		this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        this.setSize( 600, 400 );
+        this.setSize( 800, 400 );
        
         JTabbedPane tp = new JTabbedPane();
         
@@ -244,70 +244,127 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	
 public JTabbedPane initVerleihe(){
 		
-		JTabbedPane tphilfs = new JTabbedPane();
-		 tphilfs.addTab("Verleihliste", null);
-		 tphilfs.addTab("Verleih ändern", null);
-		 tphilfs.addTab("Verleih hinzu", null);
-      return tphilfs;
+	JTabbedPane tphilfs = new JTabbedPane();
+	{
+	Container hilfsComp = new Container();
+	// Zeile 1
+    JLabel lblList = new JLabel( "Ausleihen:" );
+    lblList.setBounds( 15, 15, 75, 24 );
+    hilfsComp.add( lblList );
+
+    JList ortListe = new JList();
+    ortListe.addMouseListener( this );
+    ortListe.addKeyListener( this );
+    ortListe.addListSelectionListener( this );
+    JScrollPane ortListeScrollPane = new JScrollPane( ortListe );
+    ortListeScrollPane.setBounds( 100, 15, 275, 150 );
+    ortListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( ortListeScrollPane );
+
+  	 tphilfs.addTab("Buchliste", hilfsComp);
+	 
+	 
+	}
+	
+	{
+	Container hilfsComp = new Container();
+	 
+	JLabel lblAusleihenLeser = new JLabel( "Leser:" );
+	lblAusleihenLeser.setBounds( 15, 15, 75, 24 );
+    hilfsComp.add( lblAusleihenLeser );
+
+    JList ausleihenLeserListe = new JList();
+    ausleihenLeserListe.addMouseListener( this );
+    ausleihenLeserListe.addKeyListener( this );
+    ausleihenLeserListe.addListSelectionListener( this );
+    //JScrollPane ausleihenLeserScrollPane = new JScrollPane( ausleihenLeser );
+    ausleihenLeserListe.setBounds( 75, 15, 275, 150 );
+    ausleihenLeserListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( ausleihenLeserListe );
+    
+    JLabel lblAusleihenBuch = new JLabel( "Bücher:" );
+    lblAusleihenBuch.setBounds( 400, 15, 75, 24 );
+    hilfsComp.add( lblAusleihenBuch );
+    
+    JList auleihenBuecherListe = new JList();
+    auleihenBuecherListe.addMouseListener( this );
+    auleihenBuecherListe.addKeyListener( this );
+    auleihenBuecherListe.addListSelectionListener( this );
+    //JScrollPane ortListeScrollPane = new JScrollPane( auleihenBuecher );
+    auleihenBuecherListe.setBounds( 475, 15, 275, 150 );
+    auleihenBuecherListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( auleihenBuecherListe );
+
+    JButton btnEdit = new JButton( "edit" );
+    btnEdit.setActionCommand( "editOrt" );
+    btnEdit.setBounds( 200, 195, 75, 22 );
+    btnEdit.addActionListener( this );
+    hilfsComp.add( btnEdit );
+
+        		 
+	 tphilfs.addTab("Buch anlegen&ändern", hilfsComp);
+	}
+   return tphilfs;
+	
 
 	}
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***actionPerformed*** " + arg0.toString());
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***mouseClicked*** " + arg0.toString());
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***mouseEntered*** " + arg0.toString());
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***mouseExited*** " + arg0.toString());
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***mousePressed*** " + arg0.toString());
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***mouseReleased*** " + arg0.toString());
 	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***valueChanged*** " + arg0.toString());
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***keyPressed*** " + arg0.toString());
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***keyReleased*** " + arg0.toString());
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("***keyTyped*** " + arg0.toString());
 	}
 }
