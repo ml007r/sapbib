@@ -11,32 +11,69 @@ import java.awt.event.*;
 public class BIB_Haupt extends JFrame
 implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 {
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6612455908213542855L;
 
 	/**
-     * 
+     * Alles für das Kundenpanel - und unter Panel...
      */
-    private JPanel KundePanel = null;
-    private JList kundeListe = null;
-    private JTextField kundeName = null;
+	
+	// Kundenlisten-Panel
+    JPanel KundePanel = null;
+    JButton btnKundenlisteDel = null;
+    JButton btnKundenlisteEdit = null;
+    JList kudenListe = null;
     
+    // Anlegen&Aendern-Panel
+    JTextField txtKdName = null;
+    JTextField txtKdNachname = null;
+    JTextField txtKdStrasse = null;
+    JTextField txtKdPLZ = null;
+    JTextField txtKdOrt = null;
+    JButton btnKdEdit = null;
+
+    /**
+     * Alles für das Buchpanel - und unter Panel...
+     */
+    JList buchListe = null;
+    JTextField txtBuchISBN = null;
+    JTextField txtBuchTitel = null;
+    JTextField txtBuchAutor = null;
+    JTextField txtBuchBeschreibung = null;
+    JTextField txtBuchVerlag = null;
+    JButton btnBuchEdit = null;
+    JButton btnBuchNew = null;
+    JButton btnBuchDel = null;
+    
+    /**
+     * Alles für das Verleihnpanel - und unter Panel...
+     */
+    JList verleihListe = null;
+    JList ausleihenLeserListe = null;
+    JList auleihenBuecherListe = null;
+    JButton btnVerleihEdit = null;
+    JButton btnVerleihNew = null;
     
 
 	public BIB_Haupt(){
 		super();
 		this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         this.setSize( 800, 400 );
-       
+        
         JTabbedPane tp = new JTabbedPane();
         
-       // tp.setLayout(new GridLayout( 1, 3 ));
         tp.addTab("Benutzer", initKunde());   
         tp.addTab("Medium", initBuch());
-        tp.addTab("Ausleihe", initVerleihe());        
+        tp.addTab("Ausleihe", initVerleihe());      
+        tp.addKeyListener(this);
         this.add(tp);
+        txtKdName.setText("sdfdsfdsa");
+        this.addKeyListener(this);
+        
+		System.out.println();
                
         JMenuBar menuBar = new JMenuBar();
 
@@ -55,8 +92,11 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 
         this.setJMenuBar( menuBar );
 
-        initKunde();
+        this.pack();
+        this.setSize( 800, 400 );
         this.setVisible(true);
+        System.out.println("");
+        
 	}
 
 	 
@@ -70,29 +110,29 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         lblList.setBounds( 15, 15, 75, 24 );
         hilfsComp.add( lblList );
 
-        JList ortListe = new JList();
-        ortListe.addMouseListener( this );
-        ortListe.addKeyListener( this );
-        ortListe.addListSelectionListener( this );
-        JScrollPane ortListeScrollPane = new JScrollPane( ortListe );
+        JList kundenListe = new JList();
+        kundenListe.addMouseListener( this );
+        kundenListe.addKeyListener( this );
+        kundenListe.addListSelectionListener( this );
+        JScrollPane ortListeScrollPane = new JScrollPane( kundenListe );
         ortListeScrollPane.setBounds( 100, 15, 275, 150 );
-        ortListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        kundenListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         hilfsComp.add( ortListeScrollPane );
 
         // Zeile 2
-        JButton btnEdit = new JButton( "edit" );
-        btnEdit.setActionCommand( "editOrt" );
-        btnEdit.setBounds( 200, 200, 75, 22 );
-        btnEdit.addActionListener( this );
-        hilfsComp.add( btnEdit );
+        btnKundenlisteEdit = new JButton( "edit" );
+        btnKundenlisteEdit.setActionCommand( "editKundenliste" );
+        btnKundenlisteEdit.setBounds( 200, 200, 75, 22 );
+        btnKundenlisteEdit.addActionListener( this );
+        hilfsComp.add( btnKundenlisteEdit );
 
-        JButton btnDel = new JButton( "del" );
-        btnDel.setActionCommand( "delOrt" );
-        btnDel.setBounds( 300, 200, 75, 22 );
-        btnDel.addActionListener( this );
-        hilfsComp.add( btnDel );
+        JButton btnKundenlisteDel = new JButton( "del" );
+        btnKundenlisteDel.setActionCommand( "delKundenliste" );
+        btnKundenlisteDel.setBounds( 300, 200, 75, 22 );
+        btnKundenlisteDel.addActionListener( this );
+        hilfsComp.add( btnKundenlisteDel );
 
-		 tphilfs.addTab("Kundenliste", hilfsComp);
+		tphilfs.addTab("Kundenliste", hilfsComp);
 		 
 		 
 		}
@@ -103,44 +143,53 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 		JLabel lblKdName = new JLabel( "Vorname:" );
 		lblKdName.setBounds( 15, 15, 90, 24 );
         hilfsComp.add( lblKdName );
-        JTextField txtKdName = new JTextField();
+        txtKdName = new JTextField("");
         txtKdName.setBounds(120, 15, 100, 25);
         hilfsComp.add( txtKdName );       
         
         JLabel lblKdNachname = new JLabel( "Nachname:" );
         lblKdNachname.setBounds( 15, 45, 90, 24 );
         hilfsComp.add( lblKdNachname );
-        JTextField txtKdNachname = new JTextField();
+        txtKdNachname = new JTextField();
         txtKdNachname.setBounds(120, 45, 100, 25);
         hilfsComp.add( txtKdNachname );       
         
         JLabel lblKdStrasse = new JLabel( "Strasse&Hn:" );
         lblKdStrasse.setBounds( 15, 75, 90, 24 );
         hilfsComp.add( lblKdStrasse );
-        JTextField txtKdStrasse = new JTextField();
+        txtKdStrasse = new JTextField();
         txtKdStrasse.setBounds(120, 75, 100, 25);
         hilfsComp.add( txtKdStrasse );        
         
         JLabel lblKdPLZ = new JLabel( "PLZ:" );
         lblKdPLZ.setBounds( 15, 105, 90, 24 );
         hilfsComp.add( lblKdPLZ );
-        JTextField txtKdPLZ = new JTextField();
+        txtKdPLZ = new JTextField();
         txtKdPLZ.setBounds(120, 105, 100, 25);
         hilfsComp.add( txtKdPLZ );        
         
         JLabel lblKdOrt = new JLabel( "Ort:" );
         lblKdOrt.setBounds( 15, 135, 90, 24 );
         hilfsComp.add( lblKdOrt );
-        JTextField txtKdOrt = new JTextField();
+        txtKdOrt = new JTextField();
         txtKdOrt.setBounds(120, 135, 100, 25);
         hilfsComp.add( txtKdOrt );
 
 		
-        JButton btnEdit = new JButton( "edit" );
-        btnEdit.setActionCommand( "editOrt" );
-        btnEdit.setBounds( 200, 195, 75, 22 );
-        btnEdit.addActionListener( this );
-	    hilfsComp.add( btnEdit );
+        btnKdEdit = new JButton( "new" );
+        btnKdEdit.setActionCommand( "newKd" );
+        btnKdEdit.setBounds( 120, 195, 75, 22 );
+        btnKdEdit.addActionListener( this );
+	    hilfsComp.add( btnKdEdit ); 
+	    
+	    btnKdEdit = new JButton( "edit" );
+        btnKdEdit.setActionCommand( "editKd" );
+        btnKdEdit.setBounds( 200, 195, 75, 22 );
+        btnKdEdit.addActionListener( this );
+	    hilfsComp.add( btnKdEdit ); 
+	    
+	    
+
 
 	        		 
 		 tphilfs.addTab("Kunden anlegen&ändern", hilfsComp);
@@ -154,32 +203,31 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 			JTabbedPane tphilfs = new JTabbedPane();
 			{
 			Container hilfsComp = new Container();
-			// Zeile 1
+			
 	        JLabel lblList = new JLabel( "Buch:" );
 	        lblList.setBounds( 15, 15, 75, 24 );
 	        hilfsComp.add( lblList );
 
-	        JList ortListe = new JList();
-	        ortListe.addMouseListener( this );
-	        ortListe.addKeyListener( this );
-	        ortListe.addListSelectionListener( this );
-	        JScrollPane ortListeScrollPane = new JScrollPane( ortListe );
-	        ortListeScrollPane.setBounds( 100, 15, 275, 150 );
-	        ortListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-	        hilfsComp.add( ortListeScrollPane );
+	        buchListe = new JList();
+	        buchListe.addMouseListener( this );
+	        buchListe.addKeyListener( this );
+	        buchListe.addListSelectionListener( this );
+	        JScrollPane buchListeScrollPane = new JScrollPane( buchListe );
+	        buchListeScrollPane.setBounds( 100, 15, 275, 150 );
+	        buchListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+	        hilfsComp.add( buchListeScrollPane );
 
-	        // Zeile 2
-	        JButton btnEdit = new JButton( "edit" );
-	        btnEdit.setActionCommand( "editOrt" );
-	        btnEdit.setBounds( 200, 200, 75, 22 );
-	        btnEdit.addActionListener( this );
-	        hilfsComp.add( btnEdit );
+	        btnBuchEdit = new JButton( "edit" );
+	        btnBuchEdit.setActionCommand( "editOrt" );
+	        btnBuchEdit.setBounds( 200, 200, 75, 22 );
+	        btnBuchEdit.addActionListener( this );
+	        hilfsComp.add( btnBuchEdit );
 
-	        JButton btnDel = new JButton( "del" );
-	        btnDel.setActionCommand( "delOrt" );
-	        btnDel.setBounds( 300, 200, 75, 22 );
-	        btnDel.addActionListener( this );
-	        hilfsComp.add( btnDel );
+	        btnBuchDel = new JButton( "del" );
+	        btnBuchDel.setActionCommand( "delOrt" );
+	        btnBuchDel.setBounds( 300, 200, 75, 22 );
+	        btnBuchDel.addActionListener( this );
+	        hilfsComp.add( btnBuchDel );
 
 			 tphilfs.addTab("Buchliste", hilfsComp);
 			 
@@ -192,46 +240,49 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 			JLabel lblBuchISBN = new JLabel( "ISBN:" );
 			lblBuchISBN.setBounds( 15, 15, 90, 24 );
 	        hilfsComp.add( lblBuchISBN );
-	        JTextField txtBuchISBN = new JTextField();
+	        txtBuchISBN = new JTextField();
 	        txtBuchISBN.setBounds(120, 15, 100, 25);
 	        hilfsComp.add( txtBuchISBN );       
 	        
 	        JLabel lblBuchTitel = new JLabel( "Titel:" );
 	        lblBuchTitel.setBounds( 15, 45, 90, 24 );
 	        hilfsComp.add( lblBuchTitel );
-	        JTextField txtBuchTitel = new JTextField();
+	        txtBuchTitel = new JTextField();
 	        txtBuchTitel.setBounds(120, 45, 100, 25);
 	        hilfsComp.add( txtBuchTitel );       
 	        
 	        JLabel lblBuchAutor = new JLabel( "Autor:" );
 	        lblBuchAutor.setBounds( 15, 75, 90, 24 );
 	        hilfsComp.add( lblBuchAutor );
-	        JTextField txtBuchAutor = new JTextField();
+	        txtBuchAutor = new JTextField();
 	        txtBuchAutor.setBounds(120, 75, 100, 25);
 	        hilfsComp.add( txtBuchAutor );        
 	        
 	        JLabel lblBuchBeschreibung = new JLabel( "Beschreibung:" );
 	        lblBuchBeschreibung.setBounds( 15, 105, 90, 24 );
 	        hilfsComp.add( lblBuchBeschreibung );
-	        JTextField txtBuchBeschreibung = new JTextField();
+	        txtBuchBeschreibung = new JTextField();
 	        txtBuchBeschreibung.setBounds(120, 105, 100, 25);
 	        hilfsComp.add( txtBuchBeschreibung );        
 	        
 	        JLabel lblBuchVerlag = new JLabel( "Verlag:" );
 	        lblBuchVerlag.setBounds( 15, 135, 90, 24 );
 	        hilfsComp.add( lblBuchVerlag );
-	        JTextField txtBuchVerlag = new JTextField();
+	        txtBuchVerlag = new JTextField();
 	        txtBuchVerlag.setBounds(120, 135, 100, 25);
 	        hilfsComp.add( txtBuchVerlag );
 
-
-
+	        btnBuchNew = new JButton( "new" );
+	        btnBuchNew.setActionCommand( "newBuch" );
+	        btnBuchNew.setBounds( 120, 195, 75, 22 );
+	        btnBuchNew.addActionListener( this );
+		    hilfsComp.add( btnBuchNew ); 
 			
-	        JButton btnEdit = new JButton( "edit" );
-	        btnEdit.setActionCommand( "editOrt" );
-	        btnEdit.setBounds( 200, 195, 75, 22 );
-	        btnEdit.addActionListener( this );
-		    hilfsComp.add( btnEdit );
+	        btnBuchEdit = new JButton( "edit" );
+	        btnBuchEdit.setActionCommand( "editBuch" );
+	        btnBuchEdit.setBounds( 200, 195, 75, 22 );
+	        btnBuchEdit.addActionListener( this );
+		    hilfsComp.add( btnBuchEdit );
 
 		        		 
 			 tphilfs.addTab("Buch anlegen&ändern", hilfsComp);
@@ -247,19 +298,19 @@ public JTabbedPane initVerleihe(){
 	JTabbedPane tphilfs = new JTabbedPane();
 	{
 	Container hilfsComp = new Container();
-	// Zeile 1
+	
     JLabel lblList = new JLabel( "Ausleihen:" );
     lblList.setBounds( 15, 15, 75, 24 );
     hilfsComp.add( lblList );
 
-    JList ortListe = new JList();
-    ortListe.addMouseListener( this );
-    ortListe.addKeyListener( this );
-    ortListe.addListSelectionListener( this );
-    JScrollPane ortListeScrollPane = new JScrollPane( ortListe );
-    ortListeScrollPane.setBounds( 100, 15, 275, 150 );
-    ortListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( ortListeScrollPane );
+    verleihListe = new JList();
+    verleihListe.addMouseListener( this );
+    verleihListe.addKeyListener( this );
+    verleihListe.addListSelectionListener( this );
+    JScrollPane buchListeScrollPane = new JScrollPane( verleihListe );
+    buchListeScrollPane.setBounds( 100, 15, 275, 150 );
+    verleihListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( buchListeScrollPane );
 
   	 tphilfs.addTab("Buchliste", hilfsComp);
 	 
@@ -273,7 +324,7 @@ public JTabbedPane initVerleihe(){
 	lblAusleihenLeser.setBounds( 15, 15, 75, 24 );
     hilfsComp.add( lblAusleihenLeser );
 
-    JList ausleihenLeserListe = new JList();
+    ausleihenLeserListe = new JList();
     ausleihenLeserListe.addMouseListener( this );
     ausleihenLeserListe.addKeyListener( this );
     ausleihenLeserListe.addListSelectionListener( this );
@@ -286,20 +337,26 @@ public JTabbedPane initVerleihe(){
     lblAusleihenBuch.setBounds( 400, 15, 75, 24 );
     hilfsComp.add( lblAusleihenBuch );
     
-    JList auleihenBuecherListe = new JList();
+    auleihenBuecherListe = new JList();
     auleihenBuecherListe.addMouseListener( this );
     auleihenBuecherListe.addKeyListener( this );
     auleihenBuecherListe.addListSelectionListener( this );
-    //JScrollPane ortListeScrollPane = new JScrollPane( auleihenBuecher );
+    //JScrollPane buchListeScrollPane = new JScrollPane( auleihenBuecher );
     auleihenBuecherListe.setBounds( 475, 15, 275, 150 );
     auleihenBuecherListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
     hilfsComp.add( auleihenBuecherListe );
 
-    JButton btnEdit = new JButton( "edit" );
-    btnEdit.setActionCommand( "editOrt" );
-    btnEdit.setBounds( 200, 195, 75, 22 );
-    btnEdit.addActionListener( this );
-    hilfsComp.add( btnEdit );
+    btnVerleihEdit = new JButton( "edit" );
+    btnVerleihEdit.setActionCommand( "editVerleih" );
+    btnVerleihEdit.setBounds( 200, 195, 75, 22 );
+    btnVerleihEdit.addActionListener( this );
+    hilfsComp.add( btnVerleihEdit );
+    
+    btnVerleihNew = new JButton( "new" );
+    btnVerleihNew.setActionCommand( "newVerleih" );
+    btnVerleihNew.setBounds( 120, 195, 75, 22 );
+    btnVerleihNew.addActionListener( this );
+    hilfsComp.add( btnVerleihNew ); 
 
         		 
 	 tphilfs.addTab("Buch anlegen&ändern", hilfsComp);
@@ -309,9 +366,63 @@ public JTabbedPane initVerleihe(){
 
 	}
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("***actionPerformed*** " + arg0.toString());
+		String cmd = e.getActionCommand();
+		System.out.println("***actionPerformed*** " + e.toString());
+		System.out.println(e.getActionCommand());
+		System.out.println(txtKdName.getName());
+		
+		
+		if("editKd".equals(cmd)){
+			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
+												"\nStraße: " + txtKdStrasse.getText() + "\nPLZ: " + 
+													txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
+			System.out.println(kunde);
+			
+			txtKdNachname.setText("");
+			txtKdName.setText("");
+			txtKdOrt.setText("");
+			txtKdPLZ.setText("");
+			txtKdStrasse.setText("");
+		}
+		else if("newKd".equals(cmd)){
+			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
+											"\nStraße: " + txtKdStrasse.getText() + "\nPLZ: " + 
+											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
+			System.out.println(kunde);
+			
+			txtKdNachname.setText("");
+			txtKdName.setText("");
+			txtKdOrt.setText("");
+			txtKdPLZ.setText("");
+			txtKdStrasse.setText("");
+		}
+		else if("newKd".equals(cmd)){
+			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
+											"\nStraße: " + txtKdStrasse.getText() + "\nPLZ: " + 
+											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
+			System.out.println(kunde);
+			
+			txtKdNachname.setText("");
+			txtKdName.setText("");
+			txtKdOrt.setText("");
+			txtKdPLZ.setText("");
+			txtKdStrasse.setText("");
+		}
+		else if("newKd".equals(cmd)){
+			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
+											"\nStraße: " + txtKdStrasse.getText() + "\nPLZ: " + 
+											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
+			System.out.println(kunde);
+			
+			txtKdNachname.setText("");
+			txtKdName.setText("");
+			txtKdOrt.setText("");
+			txtKdPLZ.setText("");
+			txtKdStrasse.setText("");
+		}
+		
 	}
 
 	@Override
