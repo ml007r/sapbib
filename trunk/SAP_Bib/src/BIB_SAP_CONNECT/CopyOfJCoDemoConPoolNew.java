@@ -80,15 +80,6 @@ public class CopyOfJCoDemoConPoolNew {
 		{
 			System.out.println("Kein Pool vorhanden");
 		}
-		else
-		{
-			System.out.println("PoolCurrentSize: " +pool.getCurrentPoolSize());
-			System.out.println("PoolMaxSize: " +pool.getMaxPoolSize());
-			System.out.println("PoolMaxConnections: " +pool.getMaxConnections());
-			System.out.println("PoolName: " +pool.getName());
-			System.out.println("PoolTimeOutCheckPeriod: " +pool.getTimeoutCheckPeriod());
-			System.out.println("PoolCurrentSize: " +pool.getCurrentPoolSize());
-		}
 		
 	}
 
@@ -107,7 +98,7 @@ public class CopyOfJCoDemoConPoolNew {
 	 * @param VORLESUNGSNAME
 	 *            ein Wert für den Input-Parameter "VORLESUNGSNAME"
 	 */
-	public String calcVat(int i) throws Exception {
+	public String calcVat() throws Exception {
 
 		JCO.Client client = null;
 
@@ -153,11 +144,11 @@ public class CopyOfJCoDemoConPoolNew {
 			//Record rec = x.;
 			
 			//ausgabe += x.getValue(1);
-			ausgabe += " " + x.getField("TITEL").getString();
+			//ausgabe += " " + x.getField("TITEL").getString();
 			
 			x.nextRow();
-			ausgabe += " " + x.getField("TITEL").getString();
-//			ausgabe += " " + function.getExportParameterList().getString("BESCHREIBUNG");
+			//ausgabe += " " + x.getField("TITEL").getString();
+			ausgabe += " " + function.getTableParameterList().getTable("BUCH");
 //			ausgabe += " " +function.getExportParameterList().getString("BEILAGE");
 //			ausgabe += " " + function.getExportParameterList().getString("VERLAG");
 
@@ -189,7 +180,7 @@ public class CopyOfJCoDemoConPoolNew {
 
 		try {
 
-			System.out.println("VL DBI findet statt: " + jcd.calcVat(1));
+			System.out.println(jcd.calcVat());
 			
 			
 		} catch (Exception ex) {

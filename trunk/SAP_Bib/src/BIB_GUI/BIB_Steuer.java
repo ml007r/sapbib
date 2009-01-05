@@ -10,78 +10,33 @@ import BIB_Modell.Leser;
 
 public class BIB_Steuer {
 	
-	private static Map<String, Leser> alleLeser = new HashMap< String , Leser>();
-	private static Map<String, Buch> alleBuecher = new HashMap< String , Buch>();
-	private static Map<String, Ausleihe> alleAusleihen = new HashMap< String , Ausleihe>();
+	private static ArrayList<Leser> alleLeser = new ArrayList<Leser>();
+	private static ArrayList<Buch> alleBuecher = new ArrayList<Buch>();
+	private static ArrayList<Ausleihe> alleAusleihen = new ArrayList<Ausleihe>();
 	
-	// Leser-Methoden
-	public Leser getLeser(String nachname){
-		Leser l = alleLeser.get(nachname);
-		return l;
+	public BIB_Steuer(){
+		
 	}
 	
-	public Map<String,Leser> getAlleLeser(){
+	public static ArrayList<Leser> getAlleLeser() {
 		return alleLeser;
 	}
-	
-	public void addLeser(int id, String vorname, String nachname, String strasse,
-			String plz, String ort){
-		Leser l = new Leser(id,vorname,nachname,strasse,plz,ort);
-		alleLeser.put(nachname, l);
-		
+	public static void setAlleLeser(ArrayList<Leser> alleLeser) {
+		BIB_Steuer.alleLeser = alleLeser;
 	}
-	
-	// woran erkennt man das?
-	public void editLeser(int id, String vorname, String nachname, String strasse,
-			String plz, String ort, String alt){
-		getLeser(nachname);
-		
+	public static ArrayList<Buch> getAlleBuecher() {
+		return alleBuecher;
 	}
-	
-	public void removeLeser(String nachname){
-		alleLeser.remove(nachname);		
+	public static void setAlleBuecher(ArrayList<Buch> alleBuecher) {
+		BIB_Steuer.alleBuecher = alleBuecher;
+	}
+	public static ArrayList<Ausleihe> getAlleAusleihen() {
+		return alleAusleihen;
+	}
+	public static void setAlleAusleihen(ArrayList<Ausleihe> alleAusleihen) {
+		BIB_Steuer.alleAusleihen = alleAusleihen;
 	}
 	
 	
-	// Buch-Methoden
-	public Buch getBuch(){
-		return null;
-	}
-	
-	public ArrayList<Buch> getAlleBuecher(){
-		return null;
-	}
-	
-	public void addBuch(){
-		
-	}
-	
-	public void editBuch(){
-		
-	}
-	
-	public void removeBuch(){
-		
-	}
-	
-	// Ausleihe-Funktionen
-	public Ausleihe getAusleihe(){
-		return null;
-	}
-	
-	public ArrayList<Ausleihe> getAlleAusleihen(){
-		return null;
-	}
-	
-	public void addAusleihe(){
-		
-	}
-	
-	public void removeAusleihe(){
-		
-	}
-	
-	// Verbindungen mit SAP im Controller
-
 
 }
