@@ -13,6 +13,7 @@ import java.awt.event.*;
 public class BIB_Haupt extends JFrame
 implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 {
+	// Controller
 	private BIB_Steuer controller = new BIB_Steuer();
 	/**
 	 * 
@@ -22,6 +23,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	/**
      * Alles für das Kundenpanel - und unter Panel...
      */
+	
 	
 	// Kundenlisten-Panel
     JPanel KundePanel = null;
@@ -392,9 +394,7 @@ public JTabbedPane initVerleihe(){
 			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
 											"\nStraße: " + txtKdStrasse.getText() + "\nPLZ: " + 
 											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
-			System.out.println(kunde);
-			controller.addLeser(1, txtKdName.getText(), txtKdNachname.getText(), txtKdStrasse.getText(), txtKdPLZ.getText(), txtKdOrt.getText());
-			controller.getLeser(txtKdNachname.getText());
+			
 			txtKdNachname.setText("");
 			txtKdName.setText("");
 			txtKdOrt.setText("");
