@@ -23,23 +23,24 @@ public class Leser {
 	 * @param geburtsdatum
 	 * @param geburtsort
 	 */
-	public Leser(int id, String vorname, String nachname, String strasse,
+	public Leser( String vorname, String nachname, String strasse,
 			String plz, String ort) {
 		super();
-		this.id = id;
+		//this.id = id;
 		this.vorname = vorname;
 		this.nachname = nachname;
 		Strasse = strasse;
 		this.plz = plz;
 		this.ort = ort;	
+		System.out.println("Klasse Leser: neues Kundenobjekt!");
 	}
 	
-	public int getId() {
+	/*public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
+	}*/
 	public String getVorname() {
 		return vorname;
 	}
