@@ -7,7 +7,11 @@ import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
+import BIB_Modell.Ausleihe;
+import BIB_Modell.Buch;
+import BIB_Modell.Leser;
 
 
 public class BIB_Haupt extends JFrame
@@ -25,11 +29,12 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
      */
 	
 	
-	// Kundenlisten-Panel
-    JPanel KundePanel = null;
-    JButton btnKundenlisteDel = null;
-    JButton btnKundenlisteEdit = null;
-    JList kundenListe = null;
+	// Leser-Panel
+	JTabbedPane leserListePane = new JTabbedPane();
+    JPanel LeserPanel = null;
+    JButton btnLeserListeDel = null;
+    JButton btnLeserListeEdit = null;
+    JList leserListe = new JList();
     
     // Anlegen&Aendern-Panel
     JTextField txtKdName = null;
@@ -69,7 +74,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         
         JTabbedPane tp = new JTabbedPane();
         
-        tp.addTab("Benutzer", initKunde());   
+        tp.addTab("Leser", initLeser());   
         tp.addTab("Medium", initBuch());
         tp.addTab("Ausleihe", initVerleihe());      
         tp.addKeyListener(this);
@@ -104,108 +109,87 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	}
 
 	 
-	public JTabbedPane initKunde(){
-		
-		JTabbedPane tphilfs = new JTabbedPane();
-		{
+	public Component initLeser(){
+				
 		Container hilfsComp = new Container();
 		// Zeile 1
-        JLabel lblList = new JLabel( "Kunden:" );
+        JLabel lblList = new JLabel( "Leser:" );
         lblList.setBounds( 15, 15, 75, 24 );
         hilfsComp.add( lblList );
 
-        JList kundenListe = new JList();
-        kundenListe.addMouseListener( this );
-        kundenListe.addKeyListener( this );
-        kundenListe.addListSelectionListener( this );
-        JScrollPane ortListeScrollPane = new JScrollPane( kundenListe );
+        //JList leserListe = new JList();
+        leserListe.addMouseListener( this );
+        leserListe.addKeyListener( this );
+        leserListe.addListSelectionListener( this );
+        JScrollPane ortListeScrollPane = new JScrollPane( leserListe );
         ortListeScrollPane.setBounds( 100, 15, 275, 150 );
-        kundenListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        leserListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         hilfsComp.add( ortListeScrollPane );
 
         // Zeile 2
-        btnKundenlisteEdit = new JButton( "edit" );
-        btnKundenlisteEdit.setActionCommand( "editKundenliste" );
-        btnKundenlisteEdit.setBounds( 200, 200, 75, 22 );
-        btnKundenlisteEdit.addActionListener( this );
-        hilfsComp.add( btnKundenlisteEdit );
+        btnLeserListeEdit = new JButton( "edit" );
+        btnLeserListeEdit.setActionCommand( "editLeserListe" );
+        btnLeserListeEdit.setBounds( 100, 200, 75, 22 );
+        btnLeserListeEdit.addActionListener( this );
+        hilfsComp.add( btnLeserListeEdit );
 
-        JButton btnKundenlisteDel = new JButton( "del" );
-        btnKundenlisteDel.setActionCommand( "delKundenliste" );
-        btnKundenlisteDel.setBounds( 300, 200, 75, 22 );
-        btnKundenlisteDel.addActionListener( this );
-        hilfsComp.add( btnKundenlisteDel );
-
-		tphilfs.addTab("Kundenliste", hilfsComp);
-		 
-		 
-		}
+        btnKdEdit = new JButton( "new" );
+        btnKdEdit.setActionCommand( "newKd" );
+        btnKdEdit.setBounds( 200, 200, 75, 22 );
+        btnKdEdit.addActionListener( this );
+	    hilfsComp.add( btnKdEdit ); 
+        
+        JButton btnLeserListeDel = new JButton( "del" );
+        btnLeserListeDel.setActionCommand( "delleserListe" );
+        btnLeserListeDel.setBounds( 300, 200, 75, 22 );
+        btnLeserListeDel.addActionListener( this );
+        hilfsComp.add( btnLeserListeDel );
 		
-		{
-		Container hilfsComp = new Container();
-		 
 		JLabel lblKdName = new JLabel( "Vorname:" );
-		lblKdName.setBounds( 15, 15, 90, 24 );
+		lblKdName.setBounds( 400, 15, 90, 24 );
         hilfsComp.add( lblKdName );
         txtKdName = new JTextField("");
-        txtKdName.setBounds(120, 15, 100, 25);
+        txtKdName.setBounds(520, 15, 100, 25);
         hilfsComp.add( txtKdName );       
         
         JLabel lblKdNachname = new JLabel( "Nachname:" );
-        lblKdNachname.setBounds( 15, 45, 90, 24 );
+        lblKdNachname.setBounds( 400, 45, 90, 24 );
         hilfsComp.add( lblKdNachname );
         txtKdNachname = new JTextField();
-        txtKdNachname.setBounds(120, 45, 100, 25);
+        txtKdNachname.setBounds(520, 45, 100, 25);
         hilfsComp.add( txtKdNachname );       
         
         JLabel lblKdStrasse = new JLabel( "Strasse&Hn:" );
-        lblKdStrasse.setBounds( 15, 75, 90, 24 );
+        lblKdStrasse.setBounds( 400, 75, 90, 24 );
         hilfsComp.add( lblKdStrasse );
         txtKdStrasse = new JTextField();
-        txtKdStrasse.setBounds(120, 75, 100, 25);
+        txtKdStrasse.setBounds(520, 75, 100, 25);
         hilfsComp.add( txtKdStrasse );        
         
         JLabel lblKdPLZ = new JLabel( "PLZ:" );
-        lblKdPLZ.setBounds( 15, 105, 90, 24 );
+        lblKdPLZ.setBounds( 400, 105, 90, 24 );
         hilfsComp.add( lblKdPLZ );
         txtKdPLZ = new JTextField();
-        txtKdPLZ.setBounds(120, 105, 100, 25);
+        txtKdPLZ.setBounds(520, 105, 100, 25);
         hilfsComp.add( txtKdPLZ );        
         
         JLabel lblKdOrt = new JLabel( "Ort:" );
-        lblKdOrt.setBounds( 15, 135, 90, 24 );
+        lblKdOrt.setBounds( 400, 135, 90, 24 );
         hilfsComp.add( lblKdOrt );
         txtKdOrt = new JTextField();
-        txtKdOrt.setBounds(120, 135, 100, 25);
+        txtKdOrt.setBounds(520, 135, 100, 25);
         hilfsComp.add( txtKdOrt );
-
+   	    
+	    
 		
-        btnKdEdit = new JButton( "new" );
-        btnKdEdit.setActionCommand( "newKd" );
-        btnKdEdit.setBounds( 120, 195, 75, 22 );
-        btnKdEdit.addActionListener( this );
-	    hilfsComp.add( btnKdEdit ); 
-	    
-	    btnKdEdit = new JButton( "edit" );
-        btnKdEdit.setActionCommand( "editKd" );
-        btnKdEdit.setBounds( 200, 195, 75, 22 );
-        btnKdEdit.addActionListener( this );
-	    hilfsComp.add( btnKdEdit ); 
-	    
-	    
-
-
-	        		 
-		 tphilfs.addTab("Kunden anlegen&‰ndern", hilfsComp);
-		}
-       return tphilfs;
+       return hilfsComp;
+       
 		
 	}
 	
-	public JTabbedPane initBuch(){
+	public Component initBuch(){
 		
-			JTabbedPane tphilfs = new JTabbedPane();
-			{
+			
 			Container hilfsComp = new Container();
 			
 	        JLabel lblList = new JLabel( "Buch:" );
@@ -223,75 +207,58 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 
 	        btnBuchEdit = new JButton( "edit" );
 	        btnBuchEdit.setActionCommand( "editOrt" );
-	        btnBuchEdit.setBounds( 200, 200, 75, 22 );
+	        btnBuchEdit.setBounds( 100, 200, 75, 22 );
 	        btnBuchEdit.addActionListener( this );
 	        hilfsComp.add( btnBuchEdit );
 
+	        btnBuchNew = new JButton( "new" );
+	        btnBuchNew.setActionCommand( "newBuch" );
+	        btnBuchNew.setBounds( 200, 200, 75, 22 );
+	        btnBuchNew.addActionListener( this );
+		    hilfsComp.add( btnBuchNew );
+	        
 	        btnBuchDel = new JButton( "del" );
 	        btnBuchDel.setActionCommand( "delOrt" );
 	        btnBuchDel.setBounds( 300, 200, 75, 22 );
 	        btnBuchDel.addActionListener( this );
 	        hilfsComp.add( btnBuchDel );
-
-			 tphilfs.addTab("Buchliste", hilfsComp);
-			 
-			 
-			}
-			
-			{
-			Container hilfsComp = new Container();
 			 
 			JLabel lblBuchISBN = new JLabel( "ISBN:" );
-			lblBuchISBN.setBounds( 15, 15, 90, 24 );
+			lblBuchISBN.setBounds( 400, 15, 90, 24 );
 	        hilfsComp.add( lblBuchISBN );
 	        txtBuchISBN = new JTextField();
-	        txtBuchISBN.setBounds(120, 15, 100, 25);
+	        txtBuchISBN.setBounds(520, 15, 100, 25);
 	        hilfsComp.add( txtBuchISBN );       
 	        
 	        JLabel lblBuchTitel = new JLabel( "Titel:" );
-	        lblBuchTitel.setBounds( 15, 45, 90, 24 );
+	        lblBuchTitel.setBounds( 400, 45, 90, 24 );
 	        hilfsComp.add( lblBuchTitel );
 	        txtBuchTitel = new JTextField();
-	        txtBuchTitel.setBounds(120, 45, 100, 25);
+	        txtBuchTitel.setBounds(520, 45, 100, 25);
 	        hilfsComp.add( txtBuchTitel );       
 	        
 	        JLabel lblBuchAutor = new JLabel( "Autor:" );
-	        lblBuchAutor.setBounds( 15, 75, 90, 24 );
+	        lblBuchAutor.setBounds( 400, 75, 90, 24 );
 	        hilfsComp.add( lblBuchAutor );
 	        txtBuchAutor = new JTextField();
-	        txtBuchAutor.setBounds(120, 75, 100, 25);
+	        txtBuchAutor.setBounds(520, 75, 100, 25);
 	        hilfsComp.add( txtBuchAutor );        
 	        
 	        JLabel lblBuchBeschreibung = new JLabel( "Beschreibung:" );
-	        lblBuchBeschreibung.setBounds( 15, 105, 90, 24 );
+	        lblBuchBeschreibung.setBounds( 400, 105, 90, 24 );
 	        hilfsComp.add( lblBuchBeschreibung );
 	        txtBuchBeschreibung = new JTextField();
-	        txtBuchBeschreibung.setBounds(120, 105, 100, 25);
+	        txtBuchBeschreibung.setBounds(520, 105, 100, 25);
 	        hilfsComp.add( txtBuchBeschreibung );        
 	        
 	        JLabel lblBuchVerlag = new JLabel( "Verlag:" );
-	        lblBuchVerlag.setBounds( 15, 135, 90, 24 );
+	        lblBuchVerlag.setBounds( 400, 135, 90, 24 );
 	        hilfsComp.add( lblBuchVerlag );
 	        txtBuchVerlag = new JTextField();
-	        txtBuchVerlag.setBounds(120, 135, 100, 25);
+	        txtBuchVerlag.setBounds(520, 135, 100, 25);
 	        hilfsComp.add( txtBuchVerlag );
 
-	        btnBuchNew = new JButton( "new" );
-	        btnBuchNew.setActionCommand( "newBuch" );
-	        btnBuchNew.setBounds( 120, 195, 75, 22 );
-	        btnBuchNew.addActionListener( this );
-		    hilfsComp.add( btnBuchNew ); 
-			
-	        btnBuchEdit = new JButton( "edit" );
-	        btnBuchEdit.setActionCommand( "editBuch" );
-	        btnBuchEdit.setBounds( 200, 195, 75, 22 );
-	        btnBuchEdit.addActionListener( this );
-		    hilfsComp.add( btnBuchEdit );
-
-		        		 
-			 tphilfs.addTab("Buch anlegen&‰ndern", hilfsComp);
-			}
-	       return tphilfs;
+	       return hilfsComp;
 			
 		
 
@@ -369,6 +336,20 @@ public JTabbedPane initVerleihe(){
 	
 
 	}
+public void refreshLeserListe(ArrayList<Leser> les){
+	this.leserListe.setListData( new String[] {} );
+    // ListModel l = frame.getOrtPanelSwing().getOrtListe().getModel();
+    DefaultListModel d = new DefaultListModel();
+    for ( Leser leser : les )
+    {
+        System.out.println("objekt gefunden!");
+    	d.addElement( leser.getVorname() + " " + leser.getNachname() + " " + leser.getOrt());
+        
+    }
+    leserListe.setModel( d );
+	
+}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -391,94 +372,83 @@ public JTabbedPane initVerleihe(){
 			txtKdStrasse.setText("");
 		}
 		else if("newKd".equals(cmd)){
-			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
-											"\nStraﬂe: " + txtKdStrasse.getText() + "\nPLZ: " + 
-											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
+			controller.addLeser(txtKdName.getText(), txtKdNachname.getText(), 
+					txtKdStrasse.getText(), txtKdPLZ.getText(), txtKdOrt.getText());
 			
 			txtKdNachname.setText("");
 			txtKdName.setText("");
 			txtKdOrt.setText("");
 			txtKdPLZ.setText("");
 			txtKdStrasse.setText("");
+			
+			this.refreshLeserListe(this.controller.getAlleLeser());
 		}
-		/*else if("newKd".equals(cmd)){
-			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
-											"\nStraﬂe: " + txtKdStrasse.getText() + "\nPLZ: " + 
-											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
-			System.out.println(kunde);
+		else if("editLeserListe".equals(cmd)){
+			int selected = this.leserListe.getSelectedIndex();
+			//System.out.println(selected);
+			System.out.println(this.leserListePane.getTabRunCount());
 			
-			txtKdNachname.setText("");
-			txtKdName.setText("");
-			txtKdOrt.setText("");
-			txtKdPLZ.setText("");
-			txtKdStrasse.setText("");
 		}
-		else if("newKd".equals(cmd)){
-			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
-											"\nStraﬂe: " + txtKdStrasse.getText() + "\nPLZ: " + 
-											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
-			System.out.println(kunde);
-			
-			txtKdNachname.setText("");
-			txtKdName.setText("");
-			txtKdOrt.setText("");
-			txtKdPLZ.setText("");
-			txtKdStrasse.setText("");
-		}*/
+		else if("Speichern".equals(cmd)){
+			System.out.println("Hier speichern");
+		}
+		else if("Oeffnen".equals(cmd)){
+			System.out.println("Hier oeffnen");
+		}
 		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***mouseClicked*** " + arg0.toString());
+		//System.out.println("***mouseClicked*** " + arg0.toString());
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***mouseEntered*** " + arg0.toString());
+		//System.out.println("***mouseEntered*** " + arg0.toString());
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***mouseExited*** " + arg0.toString());
+		//System.out.println("***mouseExited*** " + arg0.toString());
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***mousePressed*** " + arg0.toString());
+		//System.out.println("***mousePressed*** " + arg0.toString());
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***mouseReleased*** " + arg0.toString());
+		//System.out.println("***mouseReleased*** " + arg0.toString());
 	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***valueChanged*** " + arg0.toString());
+		//System.out.println("***valueChanged*** " + arg0.toString());
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***keyPressed*** " + arg0.toString());
+		//System.out.println("***keyPressed*** " + arg0.toString());
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***keyReleased*** " + arg0.toString());
+		//System.out.println("***keyReleased*** " + arg0.toString());
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println("***keyTyped*** " + arg0.toString());
+		//System.out.println("***keyTyped*** " + arg0.toString());
 	}
 }
