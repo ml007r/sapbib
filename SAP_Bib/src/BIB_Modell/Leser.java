@@ -1,6 +1,8 @@
 package BIB_Modell;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Leser {
 
@@ -29,8 +31,7 @@ public class Leser {
 		this.nachname = nachname;
 		Strasse = strasse;
 		this.plz = plz;
-		this.ort = ort;
-	
+		this.ort = ort;	
 	}
 	
 	public int getId() {
@@ -69,7 +70,4 @@ public class Leser {
 	public void setOrt(String ort) {
 		this.ort = ort;
 	}
-
-	
-
 }

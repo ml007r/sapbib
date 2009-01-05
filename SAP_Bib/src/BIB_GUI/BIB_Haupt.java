@@ -3,6 +3,8 @@ package BIB_GUI;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.sun.org.apache.bcel.internal.generic.LSTORE;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -11,7 +13,7 @@ import java.awt.event.*;
 public class BIB_Haupt extends JFrame
 implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 {
-	
+	private BIB_Steuer controller = new BIB_Steuer();
 	/**
 	 * 
 	 */
@@ -25,7 +27,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     JPanel KundePanel = null;
     JButton btnKundenlisteDel = null;
     JButton btnKundenlisteEdit = null;
-    JList kudenListe = null;
+    JList kundenListe = null;
     
     // Anlegen&Aendern-Panel
     JTextField txtKdName = null;
@@ -391,14 +393,15 @@ public JTabbedPane initVerleihe(){
 											"\nStraﬂe: " + txtKdStrasse.getText() + "\nPLZ: " + 
 											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
 			System.out.println(kunde);
-			
+			controller.addLeser(1, txtKdName.getText(), txtKdNachname.getText(), txtKdStrasse.getText(), txtKdPLZ.getText(), txtKdOrt.getText());
+			controller.getLeser(txtKdNachname.getText());
 			txtKdNachname.setText("");
 			txtKdName.setText("");
 			txtKdOrt.setText("");
 			txtKdPLZ.setText("");
 			txtKdStrasse.setText("");
 		}
-		else if("newKd".equals(cmd)){
+		/*else if("newKd".equals(cmd)){
 			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
 											"\nStraﬂe: " + txtKdStrasse.getText() + "\nPLZ: " + 
 											txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
@@ -421,7 +424,7 @@ public JTabbedPane initVerleihe(){
 			txtKdOrt.setText("");
 			txtKdPLZ.setText("");
 			txtKdStrasse.setText("");
-		}
+		}*/
 		
 	}
 
