@@ -1,11 +1,17 @@
-package BIB_SAP_CONNECT;
+package BIB_GUI;
 /**
  * JCoDemoConPool.java
  */
 
+import java.util.ArrayList;
+
 import com.sap.mw.jco.*;
 import com.sap.mw.jco.JCO.Record;
 import com.sap.mw.jco.JCO.Table;
+
+import BIB_Modell.Ausleihe;
+import BIB_Modell.Buch;
+import BIB_Modell.Leser;
 
 /**
  * Demonstrationsklasse zur Nutzung eines RFC-fähigen ABAP-Funktionsbausteines
@@ -16,7 +22,7 @@ import com.sap.mw.jco.JCO.Table;
  * 
  * @version 0.4
  */
-public class CopyOfJCoDemoConPoolNew {
+public class JCoDemoConPoolNew {
 
 
 	/**
@@ -35,7 +41,7 @@ public class CopyOfJCoDemoConPoolNew {
 	 * Der Std.-Konstruktor; Er Nutzt die Connection-Pool-Kennzeichnung
 	 * "StdConPoolId" zur Initialisierung des Objekts.
 	 */
-	public CopyOfJCoDemoConPoolNew() {
+	public JCoDemoConPoolNew() {
 		this("StdConPoolId");
 	}
 
@@ -45,7 +51,7 @@ public class CopyOfJCoDemoConPoolNew {
 	 * @param conPoolId
 	 *            eine eindeutige Kennzeichnung für den Connection-Pool
 	 */
-	public CopyOfJCoDemoConPoolNew(String conPoolId) {
+	public JCoDemoConPoolNew(String conPoolId) {
 		this.conPoolId = conPoolId;
 	}
 
@@ -153,10 +159,10 @@ public class CopyOfJCoDemoConPoolNew {
 			//Record rec = x.;
 			
 			//ausgabe += x.getValue(1);
-			//ausgabe += " " + x.getField("TITEL").getString();
+			ausgabe += " " + x.getField("TITEL").getString();
 			
 			x.nextRow();
-			//ausgabe += " " + x.getField("TITEL").getString();
+			ausgabe += " " + x.getField("TITEL").getString();
 //			ausgabe += " " + function.getExportParameterList().getString("BESCHREIBUNG");
 //			ausgabe += " " +function.getExportParameterList().getString("BEILAGE");
 //			ausgabe += " " + function.getExportParameterList().getString("VERLAG");
@@ -179,7 +185,7 @@ public class CopyOfJCoDemoConPoolNew {
 	public static void main(String[] argv) {
 
 		// eine Instanz der Demo-Klasse erstellen
-		CopyOfJCoDemoConPoolNew jcd = new CopyOfJCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
 
 		/*
 		 * eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -228,17 +234,9 @@ public class CopyOfJCoDemoConPoolNew {
 	 * @param VORLESUNGSNAME
 	 *            ein Wert für den Input-Parameter "VORLESUNGSNAME"
 	 */
-	public String oeffneBuch() throws Exception {
+	public ArrayList<Buch> oeffneBuch() throws Exception {
 
-
-		// eine Instanz der Demo-Klasse erstellen
-		CopyOfJCoDemoConPoolNew jcd = new CopyOfJCoDemoConPoolNew();
-
-		/*
-		 * eine Verbindung zum SAP-System per Connection-Pool einrichten und
-		 * eine Referenz zum Repository des SAP-Systems anfordern
-		 */
-		jcd.erstelleVerbindungsPool();
+		ArrayList<Buch> buch = new ArrayList();
 		
 		JCO.Client client = null;
 
@@ -274,32 +272,81 @@ public class CopyOfJCoDemoConPoolNew {
 
 			// Den EXPORT Wert "RETURN" als Double zurückgeben
 
-			String ausgabe = "";
-
 			Table x = function.getTableParameterList().getTable("BUCH");
 			x.firstRow();
-			
-			x.getField("TITEL");
-			
-			//Record rec = x.;
-			
-			//ausgabe += x.getValue(1);
-			ausgabe += " " + x.getField("TITEL").getString();
-			
-			x.nextRow();
-			ausgabe += " " + x.getField("TITEL").getString();
-//			ausgabe += " " + function.getExportParameterList().getString("BESCHREIBUNG");
-//			ausgabe += " " +function.getExportParameterList().getString("BEILAGE");
-//			ausgabe += " " + function.getExportParameterList().getString("VERLAG");
-
-			return ausgabe;
+			buch.add(new Buch(x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
+			while(x.nextRow()){
+				buch.add(new Buch(x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
+			}
+//			
 
 		} finally {
 
 			// Die Serververbindung an den Pool zurückgeben
 			JCO.releaseClient(client);
-			jcd.schliesseVerbindungsPool();
 		}
+		return buch;
+		
+	}
+	/**
+	 * Aufruf der Demofunktion "Z_dev044_Aufgabe_6_1"
+	 * 
+	 * @param VORLESUNGSNAME
+	 *            ein Wert für den Input-Parameter "VORLESUNGSNAME"
+	 */
+	public ArrayList<Leser> oeffneLeser() throws Exception {
+
+		ArrayList<Leser> leser = new ArrayList();
+		
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_LESER_ALLE_LESEN");
+
+		if (ftemplate == null)
+			throw new Exception("Funktionstemplate nicht gefunden");
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList input = function.getImportParameterList();
+
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+
+			// Den EXPORT Wert "RETURN" als Double zurückgeben
+
+			Table x = function.getTableParameterList().getTable("LESER");
+			System.out.println(x);
+			x.firstRow();
+			leser.add(new Leser(x.getField("ID").getInt(),x.getField("VORNAME").getString(),x.getField("NAME").getString(),x.getField("STRASSE").getString(),x.getField("PLZ").getString(),x.getField("ORT").getString()));
+			while(x.nextRow()){
+				leser.add(new Leser(x.getField("ID").getInt(),x.getField("VORNAME").getString(),x.getField("NAME").getString(),x.getField("STRASSE").getString(),x.getField("PLZ").getString(),x.getField("ORT").getString()));
+			}
+//			
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+		return leser;
 		
 	}
 }

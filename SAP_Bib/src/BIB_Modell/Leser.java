@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class Leser {
 
+	private static int anzahlLeser;
 	private int id;
 	private String vorname;
 	private String nachname;
@@ -23,10 +24,24 @@ public class Leser {
 	 * @param geburtsdatum
 	 * @param geburtsort
 	 */
-	public Leser( String vorname, String nachname, String strasse,
+	public Leser( int id, String vorname, String nachname, String strasse,
 			String plz, String ort) {
 		super();
-		//this.id = id;
+		this.id = id;
+		this.vorname = vorname;
+		this.nachname = nachname;
+		Strasse = strasse;
+		this.plz = plz;
+		this.ort = ort;	
+		anzahlLeser++;
+		System.out.println("Klasse Leser: neues Kundenobjekt!");
+	}
+	
+	public Leser(String vorname, String nachname, String strasse,
+			String plz, String ort) {
+		super();
+		anzahlLeser++;
+		this.id = anzahlLeser;
 		this.vorname = vorname;
 		this.nachname = nachname;
 		Strasse = strasse;
@@ -34,13 +49,19 @@ public class Leser {
 		this.ort = ort;	
 		System.out.println("Klasse Leser: neues Kundenobjekt!");
 	}
-	
-	/*public int getId() {
+	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}*/
+	}
+	public static int getAnzahlLeser() {
+		return anzahlLeser;
+	}
+
+	public static void setAnzahlLeser(int anzahlLeser) {
+		Leser.anzahlLeser = anzahlLeser;
+	}
 	public String getVorname() {
 		return vorname;
 	}
