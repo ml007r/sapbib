@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class Buch {
 	
+	private static int anzahlBuecher = 0;
 	private int id;
 	private String isbn;
 	private String titel;
@@ -14,16 +15,17 @@ public class Buch {
 	private String verlag;
 	private boolean leihe;
 	
-	public Buch(int id, String isbn, String titel, String autor,
-			String beschreibung, String verlag, boolean leihe) {
+	public Buch(String isbn, String titel, String autor,
+			String beschreibung, String verlag) {
 		super();
-		this.id = id;
+		this.id = anzahlBuecher;
 		this.isbn = isbn;
 		this.titel = titel;
 		this.autor = autor;
 		this.beschreibung = beschreibung;
 		this.verlag = verlag;
-		this.leihe = leihe;
+		this.leihe = true;
+		anzahlBuecher++;
 	}
 	
 	public Buch(){

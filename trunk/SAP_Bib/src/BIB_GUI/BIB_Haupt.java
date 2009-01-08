@@ -2,12 +2,14 @@ package BIB_GUI;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableModel;
 
 import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 import BIB_Modell.Ausleihe;
 import BIB_Modell.Buch;
@@ -34,20 +36,27 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     JPanel LeserPanel = null;
     JButton btnLeserListeDel = null;
     JButton btnLeserListeEdit = null;
-    JList leserListe = new JList();
-    
-    // Anlegen&Aendern-Panel
+    DefaultTableModel tmLeser;
+    String[] columnNamesLeser = {"ID","Name", "Nachname","Strasse&HN","PLZ","Ort"};
+    String[][] leser = {{"", "","","","",""}};
+    JTable leserListe = new JTable(leser,columnNamesLeser);
     JTextField txtKdName = null;
     JTextField txtKdNachname = null;
     JTextField txtKdStrasse = null;
     JTextField txtKdPLZ = null;
     JTextField txtKdOrt = null;
     JButton btnKdEdit = null;
+    JButton btnLeserEditStore = null;
+    JButton btnLeserAbort = null;
+    Leser hilfsLeser = null;
 
     /**
      * Alles für das Buchpanel - und unter Panel...
      */
-    JList buchListe = null;
+    String[] columnNamesBuch = {"ISBN", "Titel","Autor","Beschreibung","Verlag"};
+    String[][] buch = {{"","","","",""}};
+    JTable buchListe = new JTable(buch,columnNamesBuch);
+    DefaultTableModel tmBuch;
     JTextField txtBuchISBN = null;
     JTextField txtBuchTitel = null;
     JTextField txtBuchAutor = null;
@@ -65,12 +74,20 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     JList auleihenBuecherListe = null;
     JButton btnVerleihEdit = null;
     JButton btnVerleihNew = null;
+    String[] columnNamesLeserVerleih = {"Name", "Nachname","Strasse&HN","PLZ","Ort"};
+    String[][] leserVerleih = {{"","","","",""}};
+    JTable leserListeVerleih = new JTable(leser,columnNamesLeser);
+    String[] columnNamesBuchVerleih = {"ISBN", "Titel","Autor","Beschreibung","Verlag"};
+    String[][] buchVerleih = {{"","","","",""}};
+    JTable buchListeVerleih = new JTable(buch,columnNamesBuch);
+    String[][] ausleiheZeile = {{"","","","","",""}};
+    String[] columnNamesAusleihe = {"Vorname","Nachname","Titel","Autor","Ausleihdatum","Rueckgabedatum"};
+    JTable buchListeAusleihe = new JTable(ausleiheZeile,columnNamesAusleihe);
+    DefaultTableModel tmAusleihe;
     
-
 	public BIB_Haupt(){
 		super();
 		this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        this.setSize( 800, 400 );
         
         JTabbedPane tp = new JTabbedPane();
         
@@ -79,7 +96,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         tp.addTab("Ausleihe", initVerleihe());      
         tp.addKeyListener(this);
         this.add(tp);
-        txtKdName.setText("sdfdsfdsa");
+        txtKdName.setText("");
         this.addKeyListener(this);
         
 		System.out.println();
@@ -102,7 +119,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         this.setJMenuBar( menuBar );
 
         this.pack();
-        this.setSize( 800, 400 );
+        this.setSize( 800, 600 );
         this.setVisible(true);
         System.out.println("");
         
@@ -117,10 +134,11 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         lblList.setBounds( 15, 15, 75, 24 );
         hilfsComp.add( lblList );
 
-        //JList leserListe = new JList();
+        
+        //leserListe = new JTable(columnNamesLeser);
         leserListe.addMouseListener( this );
         leserListe.addKeyListener( this );
-        leserListe.addListSelectionListener( this );
+        //leserListe.addListSelectionListener( this );
         JScrollPane ortListeScrollPane = new JScrollPane( leserListe );
         ortListeScrollPane.setBounds( 100, 15, 275, 150 );
         leserListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -180,7 +198,21 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         txtKdOrt.setBounds(520, 135, 100, 25);
         hilfsComp.add( txtKdOrt );
    	    
-	    
+        btnLeserEditStore = new JButton( "speichern" );
+        btnLeserEditStore.setActionCommand( "speichern" );
+        btnLeserEditStore.setBounds( 450, 200, 100, 22 );
+        btnLeserEditStore.addActionListener( this );
+        hilfsComp.add( btnLeserEditStore );
+        btnLeserEditStore.setVisible(false);
+        
+
+        btnLeserAbort = new JButton( "abbrechen" );
+        btnLeserAbort.setActionCommand( "abbrechen" );
+        btnLeserAbort.setBounds( 570, 200, 100, 22 );
+        btnLeserAbort.addActionListener( this );
+	    hilfsComp.add( btnLeserAbort );
+	    btnLeserAbort.setVisible(false);
+
 		
        return hilfsComp;
        
@@ -196,10 +228,9 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	        lblList.setBounds( 15, 15, 75, 24 );
 	        hilfsComp.add( lblList );
 
-	        buchListe = new JList();
+	        
 	        buchListe.addMouseListener( this );
 	        buchListe.addKeyListener( this );
-	        buchListe.addListSelectionListener( this );
 	        JScrollPane buchListeScrollPane = new JScrollPane( buchListe );
 	        buchListeScrollPane.setBounds( 100, 15, 275, 150 );
 	        buchListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -264,89 +295,99 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 
 	}
 	
-public JTabbedPane initVerleihe(){
+public Component initVerleihe(){
 		
-	JTabbedPane tphilfs = new JTabbedPane();
-	{
+	
 	Container hilfsComp = new Container();
 	
     JLabel lblList = new JLabel( "Ausleihen:" );
     lblList.setBounds( 15, 15, 75, 24 );
     hilfsComp.add( lblList );
 
-    verleihListe = new JList();
-    verleihListe.addMouseListener( this );
-    verleihListe.addKeyListener( this );
-    verleihListe.addListSelectionListener( this );
-    JScrollPane buchListeScrollPane = new JScrollPane( verleihListe );
-    buchListeScrollPane.setBounds( 100, 15, 275, 150 );
-    verleihListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( buchListeScrollPane );
+    
+    buchListeAusleihe.addMouseListener( this );
+    buchListeAusleihe.addKeyListener( this );
+    
+    //JScrollPane buchListeScrollPane = new JScrollPane( buchListeAusleihe );
+    buchListeAusleihe.setBounds( 100, 15, 275, 150 );
+    buchListeAusleihe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( buchListeAusleihe );
 
-  	 tphilfs.addTab("Buchliste", hilfsComp);
-	 
-	 
-	}
 	
-	{
-	Container hilfsComp = new Container();
 	 
 	JLabel lblAusleihenLeser = new JLabel( "Leser:" );
-	lblAusleihenLeser.setBounds( 15, 15, 75, 24 );
+	lblAusleihenLeser.setBounds( 15, 250, 75, 24 );
     hilfsComp.add( lblAusleihenLeser );
 
-    ausleihenLeserListe = new JList();
-    ausleihenLeserListe.addMouseListener( this );
-    ausleihenLeserListe.addKeyListener( this );
-    ausleihenLeserListe.addListSelectionListener( this );
-    //JScrollPane ausleihenLeserScrollPane = new JScrollPane( ausleihenLeser );
-    ausleihenLeserListe.setBounds( 75, 15, 275, 150 );
-    ausleihenLeserListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( ausleihenLeserListe );
+    leserListeVerleih.addMouseListener( this );
+    leserListeVerleih.addKeyListener( this );
+    
+    leserListeVerleih.setBounds( 100, 250, 275, 150 );
+    leserListeVerleih.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( leserListeVerleih );
     
     JLabel lblAusleihenBuch = new JLabel( "Bücher:" );
-    lblAusleihenBuch.setBounds( 400, 15, 75, 24 );
+    lblAusleihenBuch.setBounds( 400, 250, 75, 24 );
     hilfsComp.add( lblAusleihenBuch );
     
-    auleihenBuecherListe = new JList();
-    auleihenBuecherListe.addMouseListener( this );
-    auleihenBuecherListe.addKeyListener( this );
-    auleihenBuecherListe.addListSelectionListener( this );
-    //JScrollPane buchListeScrollPane = new JScrollPane( auleihenBuecher );
-    auleihenBuecherListe.setBounds( 475, 15, 275, 150 );
-    auleihenBuecherListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( auleihenBuecherListe );
+    
+    buchListeAusleihe.addMouseListener( this );
+    buchListeAusleihe.addKeyListener( this );
+    buchListeAusleihe.setBounds( 485, 250, 275, 150 );
+    buchListeAusleihe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( buchListeAusleihe );
 
     btnVerleihEdit = new JButton( "edit" );
     btnVerleihEdit.setActionCommand( "editVerleih" );
-    btnVerleihEdit.setBounds( 200, 195, 75, 22 );
+    btnVerleihEdit.setBounds( 100, 190, 75, 22 );
     btnVerleihEdit.addActionListener( this );
     hilfsComp.add( btnVerleihEdit );
     
     btnVerleihNew = new JButton( "new" );
     btnVerleihNew.setActionCommand( "newVerleih" );
-    btnVerleihNew.setBounds( 120, 195, 75, 22 );
+    btnVerleihNew.setBounds( 200, 420, 75, 22 );
     btnVerleihNew.addActionListener( this );
     hilfsComp.add( btnVerleihNew ); 
+    
+    btnBuchDel = new JButton( "del" );
+    btnBuchDel.setActionCommand( "delVerleih" );
+    btnBuchDel.setBounds( 300, 190, 75, 22 );
+    btnBuchDel.addActionListener( this );
+    hilfsComp.add( btnBuchDel );
 
         		 
-	 tphilfs.addTab("Buch anlegen&ändern", hilfsComp);
-	}
-   return tphilfs;
+	
+   return hilfsComp;
 	
 
 	}
-public void refreshLeserListe(ArrayList<Leser> les){
-	this.leserListe.setListData( new String[] {} );
-    // ListModel l = frame.getOrtPanelSwing().getOrtListe().getModel();
-    DefaultListModel d = new DefaultListModel();
+public void refreshLeserTable(ArrayList<Leser> les){
+    tmLeser = new DefaultTableModel(columnNamesLeser,0);
+    int i = 0;
     for ( Leser leser : les )
     {
-        System.out.println("objekt gefunden!");
-    	d.addElement( leser.getVorname() + " " + leser.getNachname() + " " + leser.getOrt());
+        System.out.println("objekt gefunden!" + leser.getNachname());
+        String[] hilfsString = {leser.getId()+"",leser.getVorname(), leser.getNachname() ,leser.getOrt(), leser.getPlz(), leser.getOrt()};
+        tmLeser.insertRow(i, hilfsString);
+    	i++;
         
     }
-    leserListe.setModel( d );
+    leserListe.setModel( tmLeser );
+	
+}
+
+public void refreshBuchTable(ArrayList<Buch> buch){
+    tmBuch = new DefaultTableModel(columnNamesBuch,0);
+    int i = 0;
+    for ( Buch bu : buch )
+    {
+        System.out.println("Buch objekt gefunden!");
+        String[] hilfsString = {bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
+    	tmBuch.insertRow(i, hilfsString);
+    	i++;
+        
+    }
+    buchListe.setModel( tmBuch );
 	
 }
 
@@ -359,32 +400,52 @@ public void refreshLeserListe(ArrayList<Leser> les){
 		System.out.println(txtKdName.getName());
 		
 		
-		if("editKd".equals(cmd)){
-			String kunde = "Name: " + txtKdName.getText() + "\nNachname: " + txtKdNachname.getText() + 
-												"\nStraße: " + txtKdStrasse.getText() + "\nPLZ: " + 
-													txtKdPLZ.getText() + "\nOrt: " + txtKdOrt.getText();
-			System.out.println(kunde);
+		if("speichern".equals(cmd)){
+			hilfsLeser.setVorname(txtKdName.getText());
+			hilfsLeser.setNachname(txtKdNachname.getText());
+			hilfsLeser.setStrasse(txtKdStrasse.getText());
+			hilfsLeser.setPlz(txtKdPLZ.getText());
+			hilfsLeser.setOrt(txtKdOrt.getText());
+			tmLeser.removeRow(leserListe.getSelectedRow());
+			this.controller.setLeser(hilfsLeser);
 			
-			txtKdNachname.setText("");
-			txtKdName.setText("");
-			txtKdOrt.setText("");
-			txtKdPLZ.setText("");
-			txtKdStrasse.setText("");
-		}
-		else if("newKd".equals(cmd)){
-			controller.addLeser(txtKdName.getText(), txtKdNachname.getText(), 
-					txtKdStrasse.getText(), txtKdPLZ.getText(), txtKdOrt.getText());
+			this.refreshLeserTable(this.controller.getAlleLeser());
 			
-			txtKdNachname.setText("");
-			txtKdName.setText("");
-			txtKdOrt.setText("");
-			txtKdPLZ.setText("");
-			txtKdStrasse.setText("");
-			
-			this.refreshLeserListe(this.controller.getAlleLeser());
 		}
 		else if("editLeserListe".equals(cmd)){
-			int selected = this.leserListe.getSelectedIndex();
+			System.out.println(leserListe.getSelectedRow());
+			hilfsLeser = this.controller.getLeser(leserListe.getSelectedRow());
+			txtKdName.setText(hilfsLeser.getVorname());
+			txtKdNachname.setText(hilfsLeser.getNachname());
+			txtKdStrasse.setText(hilfsLeser.getStrasse());
+			txtKdPLZ.setText(hilfsLeser.getPlz());
+			txtKdOrt.setText(hilfsLeser.getOrt());
+			btnLeserEditStore.setVisible(true);
+			btnLeserAbort.setVisible(true);
+		}
+		else if("newKd".equals(cmd)){
+			if(!(txtKdName.getText()=="" | txtKdNachname.getText()=="" | txtKdStrasse.getText()=="" | 
+					txtKdPLZ.getText()=="" | txtKdOrt.getText()=="")){
+					
+				controller.addLeser(txtKdName.getText(), txtKdNachname.getText(), 
+							txtKdStrasse.getText(), txtKdPLZ.getText(), txtKdOrt.getText());
+					
+					txtKdNachname.setText("");
+					txtKdName.setText("");
+					txtKdOrt.setText("");
+					txtKdPLZ.setText("");
+					txtKdStrasse.setText("");
+			}
+			else{
+				JOptionPane.showMessageDialog(null,
+                "Bitte ALLE Angaben machen!!!");
+
+			}
+			
+			this.refreshLeserTable(this.controller.getAlleLeser());
+		}
+		else if("editLeserListe".equals(cmd)){
+			//int selected = this.leserListe.getSelectedIndex();
 			//System.out.println(selected);
 			System.out.println(this.leserListePane.getTabRunCount());
 			
@@ -394,6 +455,30 @@ public void refreshLeserListe(ArrayList<Leser> les){
 		}
 		else if("Oeffnen".equals(cmd)){
 			System.out.println("Hier oeffnen");
+			this.controller.oeffneDaten();
+			this.refreshBuchTable(this.controller.getAlleBuecher());
+			this.refreshLeserTable(this.controller.getAlleLeser());
+		}
+		else if("newBuch".equals(cmd)){
+			if(!(txtBuchISBN.getText()=="" | txtBuchAutor.getText()=="" | txtBuchTitel.getText()=="" | 
+					txtBuchBeschreibung.getText()=="" | txtBuchVerlag.getText()=="")){
+					
+				controller.addBuch(txtBuchISBN.getText(), txtBuchAutor.getText(), 
+						txtBuchTitel.getText(), txtBuchBeschreibung.getText(), txtBuchVerlag.getText());
+					
+					txtKdNachname.setText("");
+					txtKdName.setText("");
+					txtKdOrt.setText("");
+					txtKdPLZ.setText("");
+					txtKdStrasse.setText("");
+					System.out.println("hier bin ich");
+			}
+			else{
+				JOptionPane.showMessageDialog(null,
+                "Bitte ALLE Angaben machen!!!");
+
+			}
+			this.refreshBuchTable(this.controller.getAlleBuecher());
 		}
 		
 	}
