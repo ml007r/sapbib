@@ -349,4 +349,114 @@ public class JCoDemoConPoolNew {
 		return leser;
 		
 	}
+	/**
+	 * Aufruf der Demofunktion "Z_dev044_Aufgabe_6_1"
+	 * 
+	 * @param VORLESUNGSNAME
+	 *            ein Wert für den Input-Parameter "VORLESUNGSNAME"
+	 */
+	public void schreibeLeser(Leser les) throws Exception {
+
+		
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_LESER_SCHREIBEN");
+
+		if (ftemplate == null)
+			throw new Exception("Funktionstemplate nicht gefunden");
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList input = function.getImportParameterList();
+
+		input.setValue(les.getVorname(), "VORNAME");
+		input.setValue(les.getNachname(), "NAME");
+		input.setValue(les.getStrasse(), "STRASSE");
+		input.setValue(les.getPlz(), "PLZ");
+		input.setValue(les.getOrt(), "ORT");
+
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+			System.out.println("ZZZ_LESER_SCHREIBEN");
+
+			
+					
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+		
+	}
+
+	public void loescheLeser(int i) {
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_LESER_LOESCHEN");
+
+		if (ftemplate == null)
+			try {
+				throw new Exception("Funktionstemplate nicht gefunden");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList input = function.getImportParameterList();
+
+		input.setValue(i, "ID");
+		
+
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+			System.out.println("ZZZ_LESER_SCHREIBEN");
+
+			
+					
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+	}
 }
