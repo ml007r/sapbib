@@ -158,7 +158,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	    hilfsComp.add( btnKdEdit ); 
         
         JButton btnLeserListeDel = new JButton( "del" );
-        btnLeserListeDel.setActionCommand( "delleserListe" );
+        btnLeserListeDel.setActionCommand( "delLeser" );
         btnLeserListeDel.setBounds( 300, 200, 75, 22 );
         btnLeserListeDel.addActionListener( this );
         hilfsComp.add( btnLeserListeDel );
@@ -199,7 +199,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         hilfsComp.add( txtKdOrt );
    	    
         btnLeserEditStore = new JButton( "speichern" );
-        btnLeserEditStore.setActionCommand( "speichern" );
+        btnLeserEditStore.setActionCommand( "speichernLeser" );
         btnLeserEditStore.setBounds( 450, 200, 100, 22 );
         btnLeserEditStore.addActionListener( this );
         hilfsComp.add( btnLeserEditStore );
@@ -367,7 +367,7 @@ public void refreshLeserTable(ArrayList<Leser> les){
     for ( Leser leser : les )
     {
         System.out.println("objekt gefunden!" + leser.getNachname());
-        String[] hilfsString = {leser.getId()+"",leser.getVorname(), leser.getNachname() ,leser.getOrt(), leser.getPlz(), leser.getOrt()};
+        String[] hilfsString = {leser.getId()+"",leser.getVorname(), leser.getNachname() ,leser.getStrasse(), leser.getPlz(), leser.getOrt()};
         tmLeser.insertRow(i, hilfsString);
     	i++;
         
@@ -398,28 +398,35 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 		System.out.println("***actionPerformed*** " + e.toString());
 		System.out.println(e.getActionCommand());
 		System.out.println(txtKdName.getName());
+		int selectedRow = 0;
 		
-		
-		if("speichern".equals(cmd)){
-			hilfsLeser.setVorname(txtKdName.getText());
-			hilfsLeser.setNachname(txtKdNachname.getText());
-			hilfsLeser.setStrasse(txtKdStrasse.getText());
-			hilfsLeser.setPlz(txtKdPLZ.getText());
-			hilfsLeser.setOrt(txtKdOrt.getText());
-			tmLeser.removeRow(leserListe.getSelectedRow());
-			this.controller.setLeser(hilfsLeser);
-			
+		if("delLeser".equals(cmd)){
+			selectedRow = leserListe.getSelectedRow();
+			this.controller.removeLeser(selectedRow);
 			this.refreshLeserTable(this.controller.getAlleLeser());
-			
+				
+		}
+		if("speichernLeser".equals(cmd)){
+								
+			this.controller.setLeser(selectedRow,txtKdName.getText(),txtKdNachname.getText(),
+					txtKdStrasse.getText(),txtKdPLZ.getText(),txtKdOrt.getText());
+			txtKdNachname.setText("");
+			txtKdName.setText("");
+			txtKdOrt.setText("");
+			txtKdPLZ.setText("");
+			txtKdStrasse.setText("");			
+			this.refreshLeserTable(this.controller.getAlleLeser());
+			btnLeserEditStore.setVisible(false);
+			btnLeserAbort.setVisible(false);			
 		}
 		else if("editLeserListe".equals(cmd)){
-			System.out.println(leserListe.getSelectedRow());
-			hilfsLeser = this.controller.getLeser(leserListe.getSelectedRow());
-			txtKdName.setText(hilfsLeser.getVorname());
-			txtKdNachname.setText(hilfsLeser.getNachname());
-			txtKdStrasse.setText(hilfsLeser.getStrasse());
-			txtKdPLZ.setText(hilfsLeser.getPlz());
-			txtKdOrt.setText(hilfsLeser.getOrt());
+			selectedRow = leserListe.getSelectedRow();
+			Leser les = this.controller.getAlleLeser().get(leserListe.getSelectedRow());
+			txtKdName.setText(les.getVorname());
+			txtKdNachname.setText(les.getNachname());
+			txtKdStrasse.setText(les.getStrasse());
+			txtKdPLZ.setText(les.getPlz());
+			txtKdOrt.setText(les.getOrt());
 			btnLeserEditStore.setVisible(true);
 			btnLeserAbort.setVisible(true);
 		}
@@ -427,7 +434,7 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			if(!(txtKdName.getText()=="" | txtKdNachname.getText()=="" | txtKdStrasse.getText()=="" | 
 					txtKdPLZ.getText()=="" | txtKdOrt.getText()=="")){
 					
-				controller.addLeser(txtKdName.getText(), txtKdNachname.getText(), 
+				this.controller.addLeser(txtKdName.getText(), txtKdNachname.getText(), 
 							txtKdStrasse.getText(), txtKdPLZ.getText(), txtKdOrt.getText());
 					
 					txtKdNachname.setText("");
