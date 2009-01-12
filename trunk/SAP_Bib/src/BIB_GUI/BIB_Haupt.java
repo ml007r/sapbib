@@ -149,7 +149,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 
         // Zeile 2
         btnLeserListeEdit = new JButton( "edit" );
-        btnLeserListeEdit.setActionCommand( "editLeserListe" );
+        btnLeserListeEdit.setActionCommand( "editLeser" );
         btnLeserListeEdit.setBounds( 100, 200, 75, 22 );
         btnLeserListeEdit.addActionListener( this );
         hilfsComp.add( btnLeserListeEdit );
@@ -380,15 +380,17 @@ public Component initVerleihe(){
 
 	}
 public void refreshLeserTable(ArrayList<Leser> les){
-    tmLeser = new DefaultTableModel(columnNamesLeser,0);
-    int i = 0;
-    for ( Leser leser : les )
-    {
-        System.out.println("objekt gefunden!" + leser.getNachname());
-        String[] hilfsString = {leser.getId()+"",leser.getVorname(), leser.getNachname() ,leser.getStrasse(), leser.getPlz(), leser.getOrt()};
-        tmLeser.insertRow(i, hilfsString);
-    	i++;
-        
+	tmLeser = new DefaultTableModel(columnNamesLeser,0);
+	if(!les.isEmpty()){		
+	    int i = 0;
+	    for ( Leser leser : les )
+	    {
+	        System.out.println("objekt gefunden!" + leser.getNachname());
+	        String[] hilfsString = {leser.getId()+"",leser.getVorname(), leser.getNachname() ,leser.getStrasse(), leser.getPlz(), leser.getOrt()};
+	        tmLeser.insertRow(i, hilfsString);
+	    	i++;
+	        
+	    }
     }
     leserListe.setModel( tmLeser );
 	
@@ -445,7 +447,6 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 		}
 		else if("delLeser".equals(cmd)){
 			int i = Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "");
-			System.out.println("Zu " + i);
 			this.controller.removeLeser(controller.getLeserByID(i));
 			this.refreshLeserTable(this.controller.getAlleLeser());
 				
@@ -464,7 +465,7 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 		}
 		else if("speichernLeser".equals(cmd)){
 								
-			this.controller.setLeser(selectedRow,txtKdName.getText(),txtKdNachname.getText(),
+			this.controller.setLeser((Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "")),txtKdName.getText(),txtKdNachname.getText(),
 					txtKdStrasse.getText(),txtKdPLZ.getText(),txtKdOrt.getText());
 			txtKdNachname.setText("");
 			txtKdName.setText("");
@@ -475,14 +476,14 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			btnLeserEditStore.setVisible(false);
 			btnLeserAbort.setVisible(false);			
 		}
-		else if("editLeserListe".equals(cmd)){
-			selectedRow = leserListe.getSelectedRow();
-			Leser les = this.controller.getAlleLeser().get(leserListe.getSelectedRow());
-			txtKdName.setText(les.getVorname());
-			txtKdNachname.setText(les.getNachname());
-			txtKdStrasse.setText(les.getStrasse());
-			txtKdPLZ.setText(les.getPlz());
-			txtKdOrt.setText(les.getOrt());
+		else if("editLeser".equals(cmd)){
+			System.out.println(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "");
+			hilfsLeser = this.controller.getLeserByID((Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "")));
+			txtKdName.setText(hilfsLeser.getVorname());
+			txtKdNachname.setText(hilfsLeser.getNachname());
+			txtKdStrasse.setText(hilfsLeser.getStrasse());
+			txtKdPLZ.setText(hilfsLeser.getPlz());
+			txtKdOrt.setText(hilfsLeser.getOrt());
 			btnLeserEditStore.setVisible(true);
 			btnLeserAbort.setVisible(true);
 		}
@@ -510,7 +511,9 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 		else if("Oeffnen".equals(cmd)){
 			System.out.println("Hier oeffnen");
 			this.controller.oeffneDaten();
-			this.refreshBuchTable(this.controller.getAlleBuecher());
+			if(this.controller.getAlleBuecher().size() != 0){
+				this.refreshBuchTable(this.controller.getAlleBuecher());
+			}
 			this.refreshLeserTable(this.controller.getAlleLeser());
 		}
 		else if("newBuch".equals(cmd)){					

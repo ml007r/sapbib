@@ -49,6 +49,7 @@ public class Leser {
 		this.ort = ort;	
 		System.out.println("Klasse Leser: neues Kundenobjekt!");
 	}
+	
 	public int getId() {
 		return id;
 	}

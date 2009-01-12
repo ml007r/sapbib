@@ -121,6 +121,7 @@ public class BIB_Steuer {
 	
 	public void setLeser(int i,String vorname, String nachname, String strasse,
 			String plz, String ort){
+		Leser les = this.getLeserByID(i);
 		// eine Instanz der Demo-Klasse erstellen
 		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
 		System.out.println(i+ "setLeser : i");
@@ -131,14 +132,14 @@ public class BIB_Steuer {
 		jcd.erstelleVerbindungsPool();
 		
 		System.out.println(i + "setLeser: i");
-		this.alleLeser.get(i).setNachname(nachname);
-		this.alleLeser.get(i).setVorname(vorname);
-		this.alleLeser.get(i).setStrasse(strasse);
-		this.alleLeser.get(i).setPlz(plz);
-		this.alleLeser.get(i).setOrt(ort);
+		les.setNachname(nachname);
+		les.setVorname(vorname);
+		les.setStrasse(strasse);
+		les.setPlz(plz);
+		les.setOrt(ort);
 		
 		try {
-			jcd.schreibeLeser(this.alleLeser.get(i));
+			jcd.aendernLeser(les);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 	
