@@ -47,6 +47,7 @@ public class Leser {
 		Strasse = strasse;
 		this.plz = plz;
 		this.ort = ort;	
+		anzahlLeser++;
 		System.out.println("Klasse Leser: neues Kundenobjekt!");
 	}
 	

@@ -175,59 +175,7 @@ public class JCoDemoConPoolNew {
 			JCO.releaseClient(client);
 		}
 	}
-
-	/**
-	 * Der Einstiegspunkt zu dieser JCo Demoanwendung.
-	 * 
-	 * @param argv
-	 *            nicht verwendet
-	 */
-	public static void main(String[] argv) {
-
-		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
-
-		/*
-		 * eine Verbindung zum SAP-System per Connection-Pool einrichten und
-		 * eine Referenz zum Repository des SAP-Systems anfordern
-		 */
-		jcd.erstelleVerbindungsPool();
-
-		try {
-
-			System.out.println("VL DBI findet statt: " + jcd.calcVat());
-			
-			
-		} catch (Exception ex) {
-
-			System.out.println("Leider wurde eine Exception geworfen: \n" + ex);
-		} finally {
-
-			/*
-			 * den Connection-Pool schliessen und die Verbindung zum SAP-System
-			 * beenden
-			 */
-			
-			JCO.Pool pool = JCO.getClientPoolManager().getPool("StdConPoolId");
-			if (pool == null) 
-			{
-				System.out.println("Kein Pool vorhanden");
-			}
-			else
-			{
-				System.out.println("PoolCurrentSize: " +pool.getCurrentPoolSize());
-				System.out.println("PoolMaxSize: " +pool.getMaxPoolSize());
-				System.out.println("PoolMaxConnections: " +pool.getMaxConnections());
-				System.out.println("PoolName: " +pool.getName());
-				System.out.println("PoolTimeOutCheckPeriod: " +pool.getTimeoutCheckPeriod());
-				System.out.println("PoolCurrentSize: " +pool.getCurrentPoolSize());
-			}
-		
-			
-			
-			jcd.schliesseVerbindungsPool();
-		}
-	}
+	
 	/**
 	 * Aufruf der Demofunktion "Z_dev044_Aufgabe_6_1"
 	 * 
@@ -259,6 +207,7 @@ public class JCoDemoConPoolNew {
 		 * Die Funktionsparameter (IMPORT) der festlegen
 		 */
 		JCO.ParameterList input = function.getImportParameterList();
+		JCO.ParameterList export = function.getExportParameterList();
 
 				/*
 		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
@@ -274,10 +223,12 @@ public class JCoDemoConPoolNew {
 
 			Table x = function.getTableParameterList().getTable("BUCH");
 			x.firstRow();
-			buch.add(new Buch(x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
+			buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
 			while(x.nextRow()){
-				buch.add(new Buch(x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
+				buch.add(new Buch(x.getField("ID").getInt(),x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
 			}
+			Buch.setAnzahlBuecher(export.getField("LETZTES").getInt()+1);
+			System.out.println("letztes Buch: " + export.getField("LETZTES").getInt());
 //			
 
 		} finally {
@@ -319,6 +270,7 @@ public class JCoDemoConPoolNew {
 		 * Die Funktionsparameter (IMPORT) der festlegen
 		 */
 		JCO.ParameterList input = function.getImportParameterList();
+		JCO.ParameterList export = function.getExportParameterList();
 
 				/*
 		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
@@ -331,7 +283,7 @@ public class JCoDemoConPoolNew {
 			client.execute(function);
 
 			// Den EXPORT Wert "RETURN" als Double zurückgeben
-
+			
 			Table x = function.getTableParameterList().getTable("LESER");
 			System.out.println(x);
 			x.firstRow();
@@ -339,7 +291,8 @@ public class JCoDemoConPoolNew {
 			while(x.nextRow()){
 				leser.add(new Leser(x.getField("ID").getInt(),x.getField("VORNAME").getString(),x.getField("NAME").getString(),x.getField("STRASSE").getString(),x.getField("PLZ").getString(),x.getField("ORT").getString()));
 			}
-//			
+			Leser.setAnzahlLeser(export.getField("LETZTER").getInt()+1);
+			System.out.println("Letzter Leser:" + export.getField("LETZTER").getInt());
 
 		} finally {
 
@@ -380,6 +333,7 @@ public class JCoDemoConPoolNew {
 		 */
 		JCO.ParameterList input = function.getImportParameterList();
 
+		input.setValue(les.getId(), "ID");
 		input.setValue(les.getVorname(), "VORNAME");
 		input.setValue(les.getNachname(), "NAME");
 		input.setValue(les.getStrasse(), "STRASSE");
@@ -408,7 +362,68 @@ public class JCoDemoConPoolNew {
 		
 	}
 	
+	/**
+	 * Aufruf der Demofunktion "Z_dev044_Aufgabe_6_1"
+	 * 
+	 * @param VORLESUNGSNAME
+	 *            ein Wert für den Input-Parameter "VORLESUNGSNAME"
+	 */
+	public void schreibeBuch(Buch buch) throws Exception {
 
+		
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_BUCH_SCHREIBEN");
+
+		if (ftemplate == null)
+			throw new Exception("Funktionstemplate nicht gefunden");
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList input = function.getImportParameterList();
+
+		input.setValue(buch.getId(), "ID");
+		input.setValue(buch.getAutor(), "AUTOR");
+		input.setValue(buch.getBeschreibung(), "BESCHREIBUNG");
+		input.setValue(buch.getIsbn(), "ISBN");
+		input.setValue(buch.getTitel(), "TITEL");
+		input.setValue(buch.getVerlag(), "VERLAG");
+
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+			System.out.println("ZZZ_Buch_SCHREIBEN");
+
+			
+					
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+		
+	}
+	
+
+	
 	public void loescheLeser(int i) {
 		JCO.Client client = null;
 
@@ -517,5 +532,155 @@ public class JCoDemoConPoolNew {
 			JCO.releaseClient(client);
 		}
 		
+	}
+
+	public int letzterLeser() {
+		int i;
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_LESER_letzter");
+
+		if (ftemplate == null)
+			try {
+				throw new Exception("Funktionstemplate nicht gefunden");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList export = function.getExportParameterList();
+		
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+			System.out.println("ZZZ_LESER_letzter");
+			i = export.getField("letzter").getInt();
+			
+					
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+		return i;
+	}
+	
+	public int letztesBuch() {
+		int i;
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_BUCH_LETZTES");
+
+		if (ftemplate == null)
+			try {
+				throw new Exception("Funktionstemplate nicht gefunden");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList export = function.getExportParameterList();
+		
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+			System.out.println("ZZZ_Buch_letztes");
+			i = export.getField("letztes").getInt();
+			
+					
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+		return i;
+	}
+
+
+	public void aendernBuch(Buch buch) {
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_BUCH_AENDERN");
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList input = function.getImportParameterList();
+		input.setValue(buch.getId(), "ID");
+		input.setValue(buch.getAutor(), "AUTOR");
+		input.setValue(buch.getBeschreibung(), "BESCHREIBUNG");
+		input.setValue(buch.getIsbn(), "ISBN");
+		input.setValue(buch.getTitel(), "TITEL");
+		input.setValue(buch.getVerlag(), "VERLAG");
+
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+			System.out.println("ZZZ_BUCH_AENDERN");
+
+			
+					
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
 	}
 }
