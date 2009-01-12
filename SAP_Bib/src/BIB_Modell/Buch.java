@@ -14,7 +14,7 @@ public class Buch {
 	private String beschreibung;
 	private String verlag;
 	private boolean leihe;
-	
+
 	public Buch(String isbn, String titel, String autor,
 			String beschreibung, String verlag) {
 		super();
@@ -27,9 +27,27 @@ public class Buch {
 		this.leihe = true;
 		anzahlBuecher++;
 	}
+	public Buch(int id, String isbn, String titel, String autor,
+			String beschreibung, String verlag) {
+		super();
+		this.id = id;
+		this.isbn = isbn;
+		this.titel = titel;
+		this.autor = autor;
+		this.beschreibung = beschreibung;
+		this.verlag = verlag;
+		this.leihe = true;
+		anzahlBuecher++;
+	}
 	
 	public Buch(){
 		
+	}
+	public static int getAnzahlBuecher() {
+		return anzahlBuecher;
+	}
+	public static void setAnzahlBuecher(int anzahlBuecher) {
+		Buch.anzahlBuecher = anzahlBuecher;
 	}
 	
 	public int getId() {

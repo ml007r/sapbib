@@ -19,6 +19,7 @@ public class BIB_Steuer {
 	private  ArrayList<Buch> alleBuecher = new ArrayList<Buch>();
 	private  ArrayList<Ausleihe> alleAusleihen = new ArrayList<Ausleihe>();
 	private JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+	Leser hilfsLeser;
 	
 	
 	public BIB_Steuer(){
@@ -76,6 +77,7 @@ public class BIB_Steuer {
 			}
 		
 	}
+	
 	
 	public synchronized void removeLeser(Leser les){
 		System.out.println(alleLeser);
@@ -151,10 +153,31 @@ public class BIB_Steuer {
 		
 	}
 	// Methoden zur Pflege der Buecher
-	public void addBuch(String isbn, String titel, String autor,
+	public void addBuch(int id, String isbn, String titel, String autor,
 			String beschreibung, String verlag){
-		this.alleBuecher.add(new Buch(isbn, titel, autor,
-			 beschreibung, verlag));
+		System.out.println("neue Buch-ID: " + id);
+		Buch hilfsBuch = new Buch(id,isbn, titel, autor,beschreibung, verlag);
+		this.alleBuecher.add(hilfsBuch);
+		
+			// eine Instanz der Demo-Klasse erstellen
+			JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+			
+			
+			// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+			// eine Referenz zum Repository des SAP-Systems anfordern
+			 
+			jcd.erstelleVerbindungsPool();
+			
+			try {
+				jcd.schreibeBuch(hilfsBuch);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+		
+				System.out.println("Schreiben des Buches fehlgeschlagen!!!! " + e.getMessage());
+			}
+			finally{
+				jcd.schliesseVerbindungsPool();
+			}
 	}
 	public void removeBuch(Buch buch){
 		this.alleLeser.remove(buch);
@@ -187,7 +210,10 @@ public class BIB_Steuer {
 
 			this.alleBuecher = jcd.oeffneBuch();
 			this.alleLeser = jcd.oeffneLeser();
-			Leser.setAnzahlLeser(this.alleLeser.size());
+			//System.out.println("Letzter Leser: " + jcd.letzterLeser());
+			//Leser.setAnzahlLeser(jcd.letzterLeser());
+			//System.out.println("Letztes Buch: " + jcd.letztesBuch());
+			//Buch.setAnzahlBuecher(jcd.letztesBuch());
 			
 			
 		} catch (Exception ex) {
@@ -211,5 +237,74 @@ public class BIB_Steuer {
 			jcd.schliesseVerbindungsPool();
 		}
 	}
+	// Methoden zur Pflege der Leser
+	public void addLeser(int i, String vorname, String nachname, String strasse,
+														String plz, String ort) {
+		hilfsLeser = new Leser(i,vorname, nachname, strasse,plz, ort);
+		this.alleLeser.add(hilfsLeser);
+		System.out.println("HilfsLeser.getID() " + hilfsLeser.getId());
+		
+			// eine Instanz der Demo-Klasse erstellen
+			JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+			
+			
+			// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+			// eine Referenz zum Repository des SAP-Systems anfordern
+			 
+			jcd.erstelleVerbindungsPool();
+			
+			try{
+				jcd.schreibeLeser(hilfsLeser);
+			}
+			catch(Exception e1){
+				e1.printStackTrace();
+			}
+			finally{
+				jcd.schliesseVerbindungsPool();
+			}
+		
+	}
+
+	public Buch getBuchByID(int i) {
+		Iterator<Buch> itr = alleBuecher.iterator();
+		 while (itr.hasNext()) {
+			 Buch buch = itr.next();
+			 if(buch.getId()== i){
+				 return buch; 
+			 }
+		    }
+		 return null;
+	}
+
+	public void setBuch(int id, String isbn, String titel, String autor,
+			String beschreibung, String verlag) {
+		Buch buch = this.getBuchByID(id);
+		// eine Instanz der Demo-Klasse erstellen
+		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		
+		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+		// eine Referenz zum Repository des SAP-Systems anfordern
+		 
+		jcd.erstelleVerbindungsPool();
+		buch.setAutor(autor);
+		buch.setBeschreibung(beschreibung);
+		buch.setIsbn(isbn);
+		buch.setTitel(titel);
+		buch.setVerlag(verlag);
+		
+		try {
+			jcd.aendernBuch(buch);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+	
+			System.out.println("Schreiben des Lesers fehlgeschlagen!!!! " + e.getMessage());
+		}
+		finally{
+			jcd.schliesseVerbindungsPool();
+		}
+		
+	}
+
+	
 
 }

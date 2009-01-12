@@ -53,8 +53,8 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     /**
      * Alles für das Buchpanel - und unter Panel...
      */
-    String[] columnNamesBuch = {"ISBN", "Titel","Autor","Beschreibung","Verlag"};
-    String[][] buch = {{"","","","",""}};
+    String[] columnNamesBuch = {"ID","ISBN", "Titel","Autor","Beschreibung","Verlag"};
+    String[][] buch = {{"","","","","",""}};
     JTable buchListe = new JTable(buch,columnNamesBuch);
     DefaultTableModel tmBuch;
     JTextField txtBuchISBN = null;
@@ -67,7 +67,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     JButton btnBuchDel = null;
     JButton btnBuchEditStore = null;
     JButton btnBuchAbort = null;
-    Buch editBuch = null;
+    Buch hilfsBuch = null;
     
     /**
      * Alles für das Verleihnpanel - und unter Panel...
@@ -80,8 +80,8 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     String[] columnNamesLeserVerleih = {"Name", "Nachname","Strasse&HN","PLZ","Ort"};
     String[][] leserVerleih = {{"","","","",""}};
     JTable leserListeVerleih = new JTable(leser,columnNamesLeser);
-    String[] columnNamesBuchVerleih = {"ISBN", "Titel","Autor","Beschreibung","Verlag"};
-    String[][] buchVerleih = {{"","","","",""}};
+    String[] columnNamesBuchVerleih = {"ID","ISBN", "Titel","Autor","Beschreibung","Verlag"};
+    String[][] buchVerleih = {{"","","","","",""}};
     JTable buchListeVerleih = new JTable(buch,columnNamesBuch);
     String[][] ausleiheZeile = {{"","","","","",""}};
     String[] columnNamesAusleihe = {"Vorname","Nachname","Titel","Autor","Ausleihdatum","Rueckgabedatum"};
@@ -155,7 +155,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         hilfsComp.add( btnLeserListeEdit );
 
         btnKdEdit = new JButton( "new" );
-        btnKdEdit.setActionCommand( "newKd" );
+        btnKdEdit.setActionCommand( "newLeser" );
         btnKdEdit.setBounds( 200, 200, 75, 22 );
         btnKdEdit.addActionListener( this );
 	    hilfsComp.add( btnKdEdit ); 
@@ -385,10 +385,12 @@ public void refreshLeserTable(ArrayList<Leser> les){
 	    int i = 0;
 	    for ( Leser leser : les )
 	    {
-	        System.out.println("objekt gefunden!" + leser.getNachname());
-	        String[] hilfsString = {leser.getId()+"",leser.getVorname(), leser.getNachname() ,leser.getStrasse(), leser.getPlz(), leser.getOrt()};
-	        tmLeser.insertRow(i, hilfsString);
-	    	i++;
+	    	if(leser.getId() != 0){
+		        System.out.println("objekt gefunden!" + leser.getNachname());
+		        String[] hilfsString = {leser.getId()+"",leser.getVorname(), leser.getNachname() ,leser.getStrasse(), leser.getPlz(), leser.getOrt()};
+		        tmLeser.insertRow(i, hilfsString);
+		    	i++;
+	    	}
 	        
 	    }
     }
@@ -402,7 +404,7 @@ public void refreshBuchTable(ArrayList<Buch> buch){
     for ( Buch bu : buch )
     {
         System.out.println("Buch objekt gefunden!");
-        String[] hilfsString = {bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
+        String[] hilfsString = {bu.getId()+"", bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
     	tmBuch.insertRow(i, hilfsString);
     	i++;
         
@@ -421,12 +423,8 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 		int selectedRow = 0;
 		
 		if("speichernBuch".equals(cmd)){
-			System.out.println(editBuch.getId());
-			this.controller.getAlleBuecher().get(editBuch.getId()).setAutor(txtBuchAutor.getText());
-			this.controller.getAlleBuecher().get(editBuch.getId()).setBeschreibung(txtBuchBeschreibung.getText());
-			this.controller.getAlleBuecher().get(editBuch.getId()).setIsbn(txtBuchISBN.getText());
-			this.controller.getAlleBuecher().get(editBuch.getId()).setTitel(txtBuchTitel.getText());
-			this.controller.getAlleBuecher().get(editBuch.getId()).setVerlag(txtBuchVerlag.getText());
+			this.controller.setBuch((Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "")),txtBuchISBN.getText(),txtBuchAutor.getText(),
+					txtBuchBeschreibung.getText(), txtBuchTitel.getText(),txtBuchVerlag.getText());
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 			txtBuchISBN.setText("");
 			txtBuchAutor.setText("");
@@ -435,6 +433,29 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			txtBuchVerlag.setText("");
 			btnBuchAbort.setVisible(false);
 			btnBuchEditStore.setVisible(false);			
+		}
+		else if("newBuch".equals(cmd)){
+			this.controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(),txtBuchAutor.getText(),
+					txtBuchBeschreibung.getText(), txtBuchTitel.getText(),txtBuchVerlag.getText());
+			txtBuchISBN.setText("");
+			txtBuchAutor.setText("");
+			txtBuchBeschreibung.setText("");
+			txtBuchTitel.setText("");
+			txtBuchVerlag.setText("");
+			this.refreshBuchTable(this.controller.getAlleBuecher());
+		}
+		else if("speichernLeser".equals(cmd)){
+			
+			this.controller.setLeser((Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "")),txtKdName.getText(),txtKdNachname.getText(),
+					txtKdStrasse.getText(),txtKdPLZ.getText(),txtKdOrt.getText());
+			txtKdNachname.setText("");
+			txtKdName.setText("");
+			txtKdOrt.setText("");
+			txtKdPLZ.setText("");
+			txtKdStrasse.setText("");			
+			this.refreshLeserTable(this.controller.getAlleLeser());
+			btnLeserEditStore.setVisible(false);
+			btnLeserAbort.setVisible(false);			
 		}
 		else if ("abbrechenBuch".equals(cmd)){
 			txtBuchISBN.setText("");
@@ -452,29 +473,15 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 				
 		}
 		else if("editBuch".equals(cmd)){
+			hilfsBuch = this.controller.getBuchByID((Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "")));
 			System.out.println(buchListe.getSelectedRow());
-			selectedRow = buchListe.getSelectedRow();
-			editBuch = this.controller.getAlleBuecher().get(selectedRow);
-			txtBuchISBN.setText(editBuch.getIsbn());
-			txtBuchAutor.setText(editBuch.getAutor());
-			txtBuchBeschreibung.setText(editBuch.getBeschreibung());
-			txtBuchTitel.setText(editBuch.getTitel());
-			txtBuchVerlag.setText(editBuch.getVerlag());
+			txtBuchISBN.setText(hilfsBuch.getIsbn());
+			txtBuchAutor.setText(hilfsBuch.getAutor());
+			txtBuchBeschreibung.setText(hilfsBuch.getBeschreibung());
+			txtBuchTitel.setText(hilfsBuch.getTitel());
+			txtBuchVerlag.setText(hilfsBuch.getVerlag());
 			btnBuchAbort.setVisible(true);
 			btnBuchEditStore.setVisible(true);
-		}
-		else if("speichernLeser".equals(cmd)){
-								
-			this.controller.setLeser((Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "")),txtKdName.getText(),txtKdNachname.getText(),
-					txtKdStrasse.getText(),txtKdPLZ.getText(),txtKdOrt.getText());
-			txtKdNachname.setText("");
-			txtKdName.setText("");
-			txtKdOrt.setText("");
-			txtKdPLZ.setText("");
-			txtKdStrasse.setText("");			
-			this.refreshLeserTable(this.controller.getAlleLeser());
-			btnLeserEditStore.setVisible(false);
-			btnLeserAbort.setVisible(false);			
 		}
 		else if("editLeser".equals(cmd)){
 			System.out.println(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "");
@@ -487,24 +494,14 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			btnLeserEditStore.setVisible(true);
 			btnLeserAbort.setVisible(true);
 		}
-		else if("newKd".equals(cmd)){
-			if(!(txtKdName.getText()=="" | txtKdNachname.getText()=="" | txtKdStrasse.getText()=="" | 
-					txtKdPLZ.getText()=="" | txtKdOrt.getText()=="")){
-					
-				this.controller.addLeser(txtKdName.getText(), txtKdNachname.getText(), 
-							txtKdStrasse.getText(), txtKdPLZ.getText(), txtKdOrt.getText());
-					
+		else if("newLeser".equals(cmd)){
+					this.controller.addLeser(Leser.getAnzahlLeser(),txtKdName.getText(), txtKdNachname.getText(), 
+								txtKdStrasse.getText(), txtKdPLZ.getText(), txtKdOrt.getText());
 					txtKdNachname.setText("");
 					txtKdName.setText("");
 					txtKdOrt.setText("");
 					txtKdPLZ.setText("");
 					txtKdStrasse.setText("");
-			}
-			else{
-				JOptionPane.showMessageDialog(null,
-                "Bitte ALLE Angaben machen!!!");
-
-			}
 			
 			this.refreshLeserTable(this.controller.getAlleLeser());
 		}
@@ -517,7 +514,7 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			this.refreshLeserTable(this.controller.getAlleLeser());
 		}
 		else if("newBuch".equals(cmd)){					
-				controller.addBuch(txtBuchISBN.getText(), txtBuchAutor.getText(), 
+				controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(), txtBuchAutor.getText(), 
 						txtBuchTitel.getText(), txtBuchBeschreibung.getText(), txtBuchVerlag.getText());
 					
 					txtBuchAutor.setText("");
