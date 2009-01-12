@@ -2,6 +2,7 @@ package BIB_GUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -75,11 +76,14 @@ public class BIB_Steuer {
 			}
 		
 	}
-	public void removeLeser(int i){
-		this.alleLeser.remove(i);
+	
+	public synchronized void removeLeser(Leser les){
+		System.out.println(alleLeser);
+		alleLeser.remove(les);
+	
 		// eine Instanz der Demo-Klasse erstellen
 		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
-		System.out.println(i+ "removeLeser : i");
+		System.out.println(les.getId()+ "removeLeser : i");
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
 		// eine Referenz zum Repository des SAP-Systems anfordern
@@ -87,7 +91,7 @@ public class BIB_Steuer {
 		jcd.erstelleVerbindungsPool();
 		
 		try {
-			jcd.loescheLeser(i+1);
+			jcd.loescheLeser(les.getId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 	
@@ -103,6 +107,16 @@ public class BIB_Steuer {
 	}
 	public Leser getLeser(int i){
 		return this.alleLeser.get(i);
+	}
+	public Leser getLeserByID(int i){
+		Iterator<Leser> itr = alleLeser.iterator();
+		 while (itr.hasNext()) {
+			 Leser les = itr.next();
+			 if(les.getId()== i){
+				 return les; 
+			 }
+		    }
+		 return null;
 	}
 	
 	public void setLeser(int i,String vorname, String nachname, String strasse,
