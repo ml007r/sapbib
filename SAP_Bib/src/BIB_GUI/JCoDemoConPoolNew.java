@@ -407,6 +407,7 @@ public class JCoDemoConPoolNew {
 		}
 		
 	}
+	
 
 	public void loescheLeser(int i) {
 		JCO.Client client = null;
@@ -475,7 +476,7 @@ public class JCoDemoConPoolNew {
 		 * Template beim Repository anfordern
 		 */
 		IFunctionTemplate ftemplate = repository
-				.getFunctionTemplate("ZZZ_LESER_SCHREIBEN");
+				.getFunctionTemplate("ZZZ_LESER_AENDERN");
 
 		if (ftemplate == null)
 			throw new Exception("Funktionstemplate nicht gefunden");
@@ -489,7 +490,7 @@ public class JCoDemoConPoolNew {
 		 * Die Funktionsparameter (IMPORT) der festlegen
 		 */
 		JCO.ParameterList input = function.getImportParameterList();
-
+		input.setValue(les.getId(), "ID");
 		input.setValue(les.getVorname(), "VORNAME");
 		input.setValue(les.getNachname(), "NAME");
 		input.setValue(les.getStrasse(), "STRASSE");
