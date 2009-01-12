@@ -65,6 +65,9 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     JButton btnBuchEdit = null;
     JButton btnBuchNew = null;
     JButton btnBuchDel = null;
+    JButton btnBuchEditStore = null;
+    JButton btnBuchAbort = null;
+    Buch editBuch = null;
     
     /**
      * Alles für das Verleihnpanel - und unter Panel...
@@ -237,7 +240,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	        hilfsComp.add( buchListeScrollPane );
 
 	        btnBuchEdit = new JButton( "edit" );
-	        btnBuchEdit.setActionCommand( "editOrt" );
+	        btnBuchEdit.setActionCommand( "editBuch" );
 	        btnBuchEdit.setBounds( 100, 200, 75, 22 );
 	        btnBuchEdit.addActionListener( this );
 	        hilfsComp.add( btnBuchEdit );
@@ -288,7 +291,22 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	        txtBuchVerlag = new JTextField();
 	        txtBuchVerlag.setBounds(520, 135, 100, 25);
 	        hilfsComp.add( txtBuchVerlag );
+	        
+	        btnBuchEditStore = new JButton( "speichern" );
+	        btnBuchEditStore.setActionCommand( "speichernBuch" );
+	        btnBuchEditStore.setBounds( 450, 200, 100, 22 );
+	        btnBuchEditStore.addActionListener( this );
+	        hilfsComp.add( btnBuchEditStore );
+	        btnBuchEditStore.setVisible(false);
+	        
 
+	        btnBuchAbort = new JButton( "abbrechen" );
+	        btnBuchAbort.setActionCommand( "abbrechenBuch" );
+	        btnBuchAbort.setBounds( 570, 200, 100, 22 );
+	        btnBuchAbort.addActionListener( this );
+		    hilfsComp.add( btnBuchAbort );
+		    btnBuchAbort.setVisible(false);
+	        
 	       return hilfsComp;
 			
 		
@@ -393,20 +411,58 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		String cmd = e.getActionCommand();
 		System.out.println("***actionPerformed*** " + e.toString());
 		System.out.println(e.getActionCommand());
-		System.out.println(txtKdName.getName());
+		
+		
 		int selectedRow = 0;
 		
-		if("delLeser".equals(cmd)){
-			selectedRow = leserListe.getSelectedRow();
-			this.controller.removeLeser(selectedRow);
+		if("speichernBuch".equals(cmd)){
+			System.out.println(editBuch.getId());
+			this.controller.getAlleBuecher().get(editBuch.getId()).setAutor(txtBuchAutor.getText());
+			this.controller.getAlleBuecher().get(editBuch.getId()).setBeschreibung(txtBuchBeschreibung.getText());
+			this.controller.getAlleBuecher().get(editBuch.getId()).setIsbn(txtBuchISBN.getText());
+			this.controller.getAlleBuecher().get(editBuch.getId()).setTitel(txtBuchTitel.getText());
+			this.controller.getAlleBuecher().get(editBuch.getId()).setVerlag(txtBuchVerlag.getText());
+			this.refreshBuchTable(this.controller.getAlleBuecher());
+			txtBuchISBN.setText("");
+			txtBuchAutor.setText("");
+			txtBuchBeschreibung.setText("");
+			txtBuchTitel.setText("");
+			txtBuchVerlag.setText("");
+			btnBuchAbort.setVisible(false);
+			btnBuchEditStore.setVisible(false);			
+		}
+		else if ("abbrechenBuch".equals(cmd)){
+			txtBuchISBN.setText("");
+			txtBuchAutor.setText("");
+			txtBuchBeschreibung.setText("");
+			txtBuchTitel.setText("");
+			txtBuchVerlag.setText("");
+			btnBuchAbort.setVisible(false);
+			btnBuchEditStore.setVisible(false);
+		}
+		else if("delLeser".equals(cmd)){
+			int i = Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "");
+			System.out.println("Zu " + i);
+			this.controller.removeLeser(controller.getLeserByID(i));
 			this.refreshLeserTable(this.controller.getAlleLeser());
 				
 		}
-		if("speichernLeser".equals(cmd)){
+		else if("editBuch".equals(cmd)){
+			System.out.println(buchListe.getSelectedRow());
+			selectedRow = buchListe.getSelectedRow();
+			editBuch = this.controller.getAlleBuecher().get(selectedRow);
+			txtBuchISBN.setText(editBuch.getIsbn());
+			txtBuchAutor.setText(editBuch.getAutor());
+			txtBuchBeschreibung.setText(editBuch.getBeschreibung());
+			txtBuchTitel.setText(editBuch.getTitel());
+			txtBuchVerlag.setText(editBuch.getVerlag());
+			btnBuchAbort.setVisible(true);
+			btnBuchEditStore.setVisible(true);
+		}
+		else if("speichernLeser".equals(cmd)){
 								
 			this.controller.setLeser(selectedRow,txtKdName.getText(),txtKdNachname.getText(),
 					txtKdStrasse.getText(),txtKdPLZ.getText(),txtKdOrt.getText());
@@ -451,40 +507,22 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			
 			this.refreshLeserTable(this.controller.getAlleLeser());
 		}
-		else if("editLeserListe".equals(cmd)){
-			//int selected = this.leserListe.getSelectedIndex();
-			//System.out.println(selected);
-			System.out.println(this.leserListePane.getTabRunCount());
-			
-		}
-		else if("Speichern".equals(cmd)){
-			System.out.println("Hier speichern");
-		}
 		else if("Oeffnen".equals(cmd)){
 			System.out.println("Hier oeffnen");
 			this.controller.oeffneDaten();
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 			this.refreshLeserTable(this.controller.getAlleLeser());
 		}
-		else if("newBuch".equals(cmd)){
-			if(!(txtBuchISBN.getText()=="" | txtBuchAutor.getText()=="" | txtBuchTitel.getText()=="" | 
-					txtBuchBeschreibung.getText()=="" | txtBuchVerlag.getText()=="")){
-					
+		else if("newBuch".equals(cmd)){					
 				controller.addBuch(txtBuchISBN.getText(), txtBuchAutor.getText(), 
 						txtBuchTitel.getText(), txtBuchBeschreibung.getText(), txtBuchVerlag.getText());
 					
-					txtKdNachname.setText("");
-					txtKdName.setText("");
-					txtKdOrt.setText("");
-					txtKdPLZ.setText("");
-					txtKdStrasse.setText("");
-					System.out.println("hier bin ich");
-			}
-			else{
-				JOptionPane.showMessageDialog(null,
-                "Bitte ALLE Angaben machen!!!");
-
-			}
+					txtBuchAutor.setText("");
+					txtBuchBeschreibung.setText("");
+					txtBuchISBN.setText("");
+					txtBuchTitel.setText("");
+					txtBuchVerlag.setText("");
+			
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 		}
 		

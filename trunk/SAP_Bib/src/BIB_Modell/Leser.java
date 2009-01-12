@@ -92,4 +92,8 @@ public class Leser {
 	public void setOrt(String ort) {
 		this.ort = ort;
 	}
+	
+	public String toString(){
+		return "ID: " + getId() + " Name: " + getNachname() + " Vorname: " + getVorname()+ "\n";
+	}
 }
