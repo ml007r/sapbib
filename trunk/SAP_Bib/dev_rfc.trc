@@ -1,0 +1,71 @@
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:5076 Error in program 'javaw': ======> Connect to SAP gateway failed
+Connect_PM  GWHOST=hcc3v00.informatik.tu-muenchen.de, GWSERV=sapgw00, SYSNR=00
+
+LOCATION    CPIC (TCP/IP) on local host
+ERROR       hostname 'hcc3v00.informatik.tu-muenchen.de' unknown
+
+TIME        Mon Jan 05 17:07:45 2009
+RELEASE     710
+COMPONENT   NI (network interface)
+VERSION     39
+RC          -2
+MODULE      ninti.c
+LINE        895
+DETAIL      NiPGetHostByName: 'hcc3v00.informatik.tu-muenchen.de' not
+            found
+SYSTEM CALL getaddrinfo
+COUNTER     1
+
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:7996 Error in program 'javaw': ======> Connect to SAP gateway failed
+Connect_PM  GWHOST=hcc3v00.informatik.tu-muenchen.de, GWSERV=sapgw00, SYSNR=00
+
+LOCATION    CPIC (TCP/IP) on local host
+ERROR       hostname 'hcc3v00.informatik.tu-muenchen.de' unknown
+
+TIME        Mon Jan 05 17:08:01 2009
+RELEASE     710
+COMPONENT   NI (network interface)
+VERSION     39
+RC          -2
+MODULE      ninti.c
+LINE        895
+DETAIL      NiPGetHostByName: 'hcc3v00.informatik.tu-muenchen.de' not
+            found
+SYSTEM CALL getaddrinfo
+COUNTER     1
+
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:2984 Error in program 'javaw': ======> Der Funktionsbaustein ist nicht aktiviert oder ohne Coding.
+T:2984 Error in program 'javaw': <* RfcReceive [2] : returns 3:RFC_SYS_EXCEPTION
+T:2984 Error in program 'javaw': <* RfcCallReceive [2] : returns 3:RFC_SYS_EXCEPTION
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:5420 Error in program 'javaw': ======> Connect to SAP gateway failed
+Connect_PM  GWHOST=hcc3v00.informatik.tu-muenchen.de, GWSERV=sapgw00, SYSNR=00
+
+LOCATION    CPIC (TCP/IP) on local host
+ERROR       partner 'hcc3v00.informatik.tu-muenchen.de:3300' not reached
+
+TIME        Tue Jan 06 19:07:52 2009
+RELEASE     710
+COMPONENT   NI (network interface)
+VERSION     39
+RC          -10
+MODULE      nixxi.cpp
+LINE        2985
+DETAIL      NiPConnect2
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     1
+
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:3488 Error in program 'javaw': ======> SQL-Fehler -5015 bei der Ausführung von EXEC SQL aufgetreten
+T:3488 Error in program 'javaw': <* RfcReceive [4] : returns 3:RFC_SYS_EXCEPTION
+T:3488 Error in program 'javaw': <* RfcCallReceive [4] : returns 3:RFC_SYS_EXCEPTION

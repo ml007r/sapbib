@@ -180,7 +180,27 @@ public class BIB_Steuer {
 			}
 	}
 	public void removeBuch(Buch buch){
-		this.alleLeser.remove(buch);
+		alleBuecher.remove(buch);
+	
+		// eine Instanz der Demo-Klasse erstellen
+		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		System.out.println(buch.getId()+ "removeBuch : i");
+		
+		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+		// eine Referenz zum Repository des SAP-Systems anfordern
+		 
+		jcd.erstelleVerbindungsPool();
+		
+		try {
+			jcd.loescheBuch(buch.getId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+	
+			System.out.println("Schreiben des Lesers fehlgeschlagen!!!! " + e.getMessage());
+		}
+		finally{
+			jcd.schliesseVerbindungsPool();
+		}
 	}
 	public void removeAllBuecher(){
 		this.alleBuecher = null;

@@ -222,10 +222,17 @@ public class JCoDemoConPoolNew {
 			// Den EXPORT Wert "RETURN" als Double zurückgeben
 
 			Table x = function.getTableParameterList().getTable("BUCH");
+			System.out.println(x);
 			x.firstRow();
-			buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
+			char test = x.getField("LOESCHEN").getChar();
+			System.out.println("Loeschzeichen Buch: " + x.getField("LOESCHEN").getChar());
+			{
+				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
+			}
 			while(x.nextRow()){
+				{
 				buch.add(new Buch(x.getField("ID").getInt(),x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
+				}
 			}
 			Buch.setAnzahlBuecher(export.getField("LETZTES").getInt()+1);
 			System.out.println("letztes Buch: " + export.getField("LETZTES").getInt());
@@ -673,6 +680,58 @@ public class JCoDemoConPoolNew {
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
 			System.out.println("ZZZ_BUCH_AENDERN");
+
+			
+					
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+	}
+
+	public void loescheBuch(int id) {
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_BUCH_LOESCHEN");
+
+		if (ftemplate == null)
+			try {
+				throw new Exception("Funktionstemplate nicht gefunden");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList input = function.getImportParameterList();
+
+		input.setValue(id, "ID");
+		
+
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+			System.out.println("ZZZ_BUCH_SCHREIBEN");
 
 			
 					
