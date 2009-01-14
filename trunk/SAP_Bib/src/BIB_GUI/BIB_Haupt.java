@@ -8,10 +8,11 @@ import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import BIB_Modell.Ausleihe;
+import BIB_Modell.Verleih;
 import BIB_Modell.Buch;
 import BIB_Modell.Leser;
 
@@ -68,6 +69,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     JButton btnBuchEditStore = null;
     JButton btnBuchAbort = null;
     Buch hilfsBuch = null;
+    JScrollPane buchListeScrollPane = null;
     
     /**
      * Alles für das Verleihnpanel - und unter Panel...
@@ -76,17 +78,20 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     JButton btnVerleihNew = null;
     JButton btnVerleihDel = null;
     
-    JTable buchListeVerleih = new JTable(buch,columnNamesBuch);
-    
     String[] columnNamesLeserVerleih = {"ID","Name", "Nachname","Strasse&HN","PLZ","Ort"};
-    String[][] leserVerleih = {{"","","","","",""}};
-    JTable leserListeVerleih = new JTable(leserVerleih,columnNamesLeserVerleih);
+    String[][] leserVerleihZeile = {{"","","","","",""}};
+    JTable leserVerleih = new JTable(leserVerleihZeile,columnNamesLeserVerleih);
+    DefaultTableModel tmLeserVerleih;
     
-    String[][] ausleiheZeile = {{"","","","","",""}};
-    String[] columnNamesAusleihe = {"Vorname","Nachname","Titel","Autor","Ausleihdatum","Rueckgabedatum"};
-    JTable buchListeAusleihe = new JTable(ausleiheZeile,columnNamesAusleihe);
+    String[] columnNamesBuchVerleih = {"ID","ISBN", "Titel","Autor","Beschreibung","Verlag"};
+    String[][] buchVerleihZeile = {{"","","","","",""}};
+    JTable buchVerleih = new JTable(buchVerleihZeile,columnNamesBuchVerleih);
+    DefaultTableModel tmBuchVerleih;
     
-    DefaultTableModel tmAusleihe;
+    String[] columnNamesVerleih = {"ID" , "Buch ID", "Leser ID","Ausleihdatum","Rückgabedatum"};
+    String[][] verleihZeile = {{"","","","",""}};
+    JTable verleihListe = new JTable(verleihZeile,columnNamesVerleih);
+    DefaultTableModel tmVerleih;
     
 	public BIB_Haupt(){
 		super();
@@ -234,7 +239,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 	        
 	        buchListe.addMouseListener( this );
 	        buchListe.addKeyListener( this );
-	        JScrollPane buchListeScrollPane = new JScrollPane( buchListe );
+	        buchListeScrollPane = new JScrollPane( buchListe );
 	        buchListeScrollPane.setBounds( 100, 15, 275, 150 );
 	        buchListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 	        hilfsComp.add( buchListeScrollPane );
@@ -317,31 +322,64 @@ public Component initVerleihe(){
 		
 	
 	Container hilfsComp = new Container();
-		
-    buchListeAusleihe.addMouseListener( this );
-    buchListeAusleihe.addKeyListener( this );
-    JScrollPane ortListeScrollPane = new JScrollPane( buchListeAusleihe );
-    ortListeScrollPane.setBounds( 100, 15, 275, 150 );
-    buchListeAusleihe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( ortListeScrollPane );
-    
-   /*buchListeAusleihe.addMouseListener( this );
-    buchListeAusleihe.addKeyListener( this );
-    JScrollPane ortListeScrollPane = new JScrollPane( buchListeAusleihe );
-    ortListeScrollPane.setBounds( 100, 15, 275, 150 );
-    buchListeAusleihe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( ortListeScrollPane );*/
-    
-    buchListeVerleih.addMouseListener( this );
-    buchListeVerleih.addKeyListener( this );
-    JScrollPane ortListePane = new JScrollPane( buchListeVerleih );
-    ortListeScrollPane.setBounds( 100, 300, 275, 150 );
-    buchListeAusleihe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( ortListePane );
-    
-    
+	
+	JLabel lblListLeser = new JLabel( "Leser:" );
+	lblListLeser.setBounds( 15, 15, 75, 24 );
+    hilfsComp.add( lblListLeser );
 
-     
+    leserVerleih.addMouseListener( this );
+	leserVerleih.addKeyListener( this );
+	JScrollPane leserListeVerleihScrollPane = new JScrollPane( leserVerleih );
+    leserListeVerleihScrollPane.setBounds( 100, 15, 275, 150 );
+    leserVerleih.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( leserListeVerleihScrollPane );
+        
+    JLabel lblListBuch = new JLabel( "Buch:" );
+    lblListBuch.setBounds( 400, 15, 75, 24 );
+    hilfsComp.add( lblListBuch );
+
+    buchVerleih.addMouseListener( this );
+    buchVerleih.addKeyListener( this );
+	JScrollPane buchListeVerleihScrollPane = new JScrollPane( buchVerleih );
+	buchListeVerleihScrollPane.setBounds( 450, 15, 275, 150 );
+    buchVerleih.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( buchListeVerleihScrollPane );
+        
+    JLabel lblListVerleih = new JLabel( "Verleih:" );
+    lblListVerleih.setBounds( 15, 250, 75, 24 );
+    hilfsComp.add( lblListVerleih );
+
+    verleihListe.addMouseListener( this );
+    verleihListe.addKeyListener( this );
+	JScrollPane listeVerleihScrollPane = new JScrollPane(  verleihListe );
+	listeVerleihScrollPane.setBounds( 100 , 250, 500, 150 );
+    verleihListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( listeVerleihScrollPane );
+	
+    
+    btnVerleihNew = new JButton( "new" );
+    btnVerleihNew.setActionCommand( "newVerleih" );
+    btnVerleihNew.setBounds( 100, 200, 75, 22 );
+    btnVerleihNew.addActionListener( this );
+    hilfsComp.add( btnVerleihNew );
+    btnVerleihNew.setVisible(true);
+    
+    btnVerleihEdit = new JButton( "edit" );
+    btnVerleihEdit.setActionCommand( "editVerleih" );
+    btnVerleihEdit.setBounds( 100,430, 75, 22 );
+    btnVerleihEdit.addActionListener( this );
+    hilfsComp.add( btnVerleihEdit );
+    btnVerleihEdit.setVisible(true);
+    
+    btnVerleihDel = new JButton( "del" );
+    btnVerleihDel.setActionCommand( "delVerleih" );
+    btnVerleihDel.setBounds( 200, 430, 75, 22 );
+    btnVerleihDel.addActionListener( this );
+    hilfsComp.add( btnVerleihDel );
+    btnVerleihDel.setVisible(true);
+    
+   
+        
    return hilfsComp;
 	
 
@@ -364,6 +402,7 @@ public void refreshLeserTable(ArrayList<Leser> les){
 	    }
     }
     leserListe.setModel( tmLeser );
+    leserVerleih.setModel(tmLeser);
 	
 }
 
@@ -379,6 +418,33 @@ public void refreshBuchTable(ArrayList<Buch> buch){
         
     }
     buchListe.setModel( tmBuch );
+    tmBuchVerleih = new DefaultTableModel(columnNamesBuchVerleih,0);
+    int j = 0;
+    for ( Buch bu : buch )
+    {
+        if(bu.getVerleihStatus()){
+	    	System.out.println("Buch objekt gefunden mit verleihStatus true!");
+	        String[] hilfsString = {bu.getId()+"", bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
+	        tmBuchVerleih.insertRow(j, hilfsString);
+	    	j++;
+        }        
+    }
+    buchVerleih.setModel(tmBuchVerleih);
+	
+}
+
+public void refreshVerleihTable(ArrayList<Verleih> verleih){
+    tmVerleih = new DefaultTableModel(columnNamesVerleih,0);
+    int i = 0;
+    for ( Verleih ver : verleih )
+    {
+        System.out.println("Verleih objekt gefunden!");
+        String[] hilfsString = {ver.getId()+"",ver.getDasBuch()+"",ver.getDerLeser()+"", ver.getAusleihdatum().toLocaleString().substring(0, 10), ver.getRueckgabedatum().toLocaleString().substring(0, 10)};
+    	tmVerleih.insertRow(i, hilfsString);
+    	i++;
+        
+    }
+    verleihListe.setModel( tmVerleih );
 	
 }
 
@@ -402,6 +468,12 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			txtBuchVerlag.setText("");
 			btnBuchAbort.setVisible(false);
 			btnBuchEditStore.setVisible(false);			
+		}
+		else if("newVerleih".equals(cmd)){
+			/*this.controller.setVerleih(Verleih.getAnzahlVerleihen(),System.get, Date rueckgabedatum,
+					int derLeser, int dasBuch);*/
+			String now = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date());
+			System.out.println(now);
 		}
 		else if("newBuch".equals(cmd)){
 			System.out.println("Buch.getAnzahlBuecher()"+ Buch.getAnzahlBuecher());
@@ -488,6 +560,7 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 				this.refreshBuchTable(this.controller.getAlleBuecher());
 			}
 			this.refreshLeserTable(this.controller.getAlleLeser());
+			this.refreshVerleihTable(this.controller.getAlleVerleihen());
 		}
 		else if("newBuch".equals(cmd)){					
 				controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(), txtBuchAutor.getText(), 

@@ -2,27 +2,37 @@ package BIB_Modell;
 
 import java.util.Date;
 
-public class Ausleihe {
+public class Verleih {
 
+	private static int anzahlVerleihen;
 	private int id;
 	private Date ausleihdatum;
 	private Date rueckgabedatum;
-	private Leser derLeser;
-	private Buch dasBuch;
-	private Date frist;
+	private int derLeser;
+	private int dasBuch;
+	//private Date frist;
 	
 	
-	public Ausleihe(int id, Date ausleihdatum, Date rueckgabedatum,
-			Leser derLeser, Buch dasBuch, Date frist) {
+	public Verleih(int id, Date ausleihdatum, Date rueckgabedatum,
+			int derLeser, int dasBuch) {
 		super();
 		this.id = id;
 		this.ausleihdatum = ausleihdatum;
 		this.rueckgabedatum = rueckgabedatum;
 		this.derLeser = derLeser;
 		this.dasBuch = dasBuch;
-		this.frist = frist;
+//		this.frist = frist;
+		anzahlVerleihen++;
 	}
 	
+	public static int getAnzahlVerleihen() {
+		return anzahlVerleihen;
+	}
+
+	public static void setAnzahlVerleihen(int anzahlVerleihen) {
+		Verleih.anzahlVerleihen = anzahlVerleihen;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -41,24 +51,25 @@ public class Ausleihe {
 	public void setRueckgabedatum(Date rueckgabedatum) {
 		this.rueckgabedatum = rueckgabedatum;
 	}
-	public Leser getDerLeser() {
+	public int getDerLeser() {
 		return derLeser;
 	}
-	public void setDerLeser(Leser derLeser) {
+	public void setDerLeser(int derLeser) {
 		this.derLeser = derLeser;
 	}
-	public Buch getDasBuch() {
+	public int getDasBuch() {
 		return dasBuch;
 	}
-	public void setDasBuch(Buch dasBuch) {
+	public void setDasBuch(int dasBuch) {
 		this.dasBuch = dasBuch;
 	}
-	public Date getFrist() {
+	
+	/*public Date getFrist() {
 		return frist;
 	}
 	public void setFrist(Date frist) {
 		this.frist = frist;
-	}
+	}*/
 	
 	
 }

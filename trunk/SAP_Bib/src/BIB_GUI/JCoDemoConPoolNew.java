@@ -4,12 +4,13 @@ package BIB_GUI;
  */
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.sap.mw.jco.*;
 import com.sap.mw.jco.JCO.Record;
 import com.sap.mw.jco.JCO.Table;
 
-import BIB_Modell.Ausleihe;
+import BIB_Modell.Verleih;
 import BIB_Modell.Buch;
 import BIB_Modell.Leser;
 
@@ -222,20 +223,28 @@ public class JCoDemoConPoolNew {
 			// Den EXPORT Wert "RETURN" als Double zurückgeben
 
 			Table x = function.getTableParameterList().getTable("BUCH");
+			System.out.println("letztes Buch: " + export.getField("LETZTES").getInt());
+			Buch.setAnzahlBuecher(export.getField("LETZTES").getInt());
 			System.out.println(x);
 			x.firstRow();
-			char test = x.getField("LOESCHEN").getChar();
-			System.out.println("Loeschzeichen Buch: " + x.getField("LOESCHEN").getChar());
-			{
-				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
+			if(x.getField("VERLEIHSTATUS").getChar() != 'X'){
+				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString(), true));
+			}
+			else{ 
+				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString(),false));
+				System.out.println("verliehenes Buch");
 			}
 			while(x.nextRow()){
-				{
-				buch.add(new Buch(x.getField("ID").getInt(),x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString()));
-				}
+			if(x.getField("VERLEIHSTATUS").getChar() != 'X'){
+				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString(),true));
+			}
+			else{
+				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString(), false));
+				System.out.println("verliehenes Buch");
 			}
 			Buch.setAnzahlBuecher(export.getField("LETZTES").getInt()+1);
 			System.out.println("letztes Buch: " + export.getField("LETZTES").getInt());
+			}
 //			
 
 		} finally {
@@ -307,6 +316,71 @@ public class JCoDemoConPoolNew {
 			JCO.releaseClient(client);
 		}
 		return leser;
+		
+	}
+	/**
+	 * Aufruf der Demofunktion "Z_dev044_Aufgabe_6_1"
+	 * 
+	 * @param VORLESUNGSNAME
+	 *            ein Wert für den Input-Parameter "VORLESUNGSNAME"
+	 */
+	public ArrayList<Verleih> oeffneVerleih() throws Exception {
+
+		ArrayList<Verleih> verleih = new ArrayList();
+		
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_VERLEIH_ALLE_LESEN");
+
+		if (ftemplate == null)
+			throw new Exception("Funktionstemplate nicht gefunden");
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList input = function.getImportParameterList();
+		JCO.ParameterList export = function.getExportParameterList();
+
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+
+			// Den EXPORT Wert "RETURN" als Double zurückgeben
+			
+			Table x = function.getTableParameterList().getTable("VERLEIH");
+			System.out.println(x);
+			Verleih.setAnzahlVerleihen(export.getField("LETZTER").getInt()+1);
+			x.firstRow();
+			verleih.add(new Verleih(x.getField("ID").getInt(), x.getField("AUSLEIH_DATUM").getDate(), x.getField("RUECKGABE_DATUM").getDate(),
+					x.getField("LESER_ID").getInt(),x.getField("BUCH_ID").getInt()));
+			while(x.nextRow()){
+				verleih.add(new Verleih(x.getField("ID").getInt(), x.getField("AUSLEIHDATUM").getDate(), x.getField("RUECKGABEDATUM").getDate(),
+						x.getField("LESER_ID").getInt(),x.getField("BUCH_ID").getInt()));
+			}
+			
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+		return verleih;
 		
 	}
 	/**
@@ -741,5 +815,60 @@ public class JCoDemoConPoolNew {
 			// Die Serververbindung an den Pool zurückgeben
 			JCO.releaseClient(client);
 		}
+	}
+
+	public void schreibeVerleih(Verleih hilfsVerleih) {
+		JCO.Client client = null;
+
+		/*
+		 * Die Schnittstellen-Beschreibung der gewünschten RFC-Funktion als
+		 * Template beim Repository anfordern
+		 */
+		IFunctionTemplate ftemplate = repository
+				.getFunctionTemplate("ZZZ_VERLEIH_SCHREIBEN");
+
+		if (ftemplate == null)
+			try {
+				throw new Exception("Funktionstemplate nicht gefunden");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		/*
+		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
+		 */
+		JCO.Function function = ftemplate.getFunction();
+
+		/*
+		 * Die Funktionsparameter (IMPORT) der festlegen
+		 */
+		JCO.ParameterList input = function.getImportParameterList();
+
+		input.setValue(hilfsVerleih.getId(), "ID");
+		input.setValue(hilfsVerleih.getDasBuch(), "BUCH_ID");
+		input.setValue(hilfsVerleih.getDerLeser(), "LESER_ID");
+		input.setValue(hilfsVerleih.getAusleihdatum(), "AUSLEIH_DATUM");
+		input.setValue(hilfsVerleih.getRueckgabedatum(), "RUECKGABE_DATUM");
+				/*
+		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
+		 */
+		client = JCO.getClient(this.conPoolId);
+
+		try {
+
+			// Die Funktion synchron beim Remote-System ausführen
+			client.execute(function);
+			System.out.println("ZZZ_VERLEIH_SCHREIBEN");
+
+			
+					
+
+		} finally {
+
+			// Die Serververbindung an den Pool zurückgeben
+			JCO.releaseClient(client);
+		}
+		
 	}
 }
