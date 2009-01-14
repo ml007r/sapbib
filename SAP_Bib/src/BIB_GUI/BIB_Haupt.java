@@ -72,20 +72,20 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     /**
      * Alles für das Verleihnpanel - und unter Panel...
      */
-    JList verleihListe = null;
-    JList ausleihenLeserListe = null;
-    JList auleihenBuecherListe = null;
     JButton btnVerleihEdit = null;
     JButton btnVerleihNew = null;
-    String[] columnNamesLeserVerleih = {"Name", "Nachname","Strasse&HN","PLZ","Ort"};
-    String[][] leserVerleih = {{"","","","",""}};
-    JTable leserListeVerleih = new JTable(leser,columnNamesLeser);
-    String[] columnNamesBuchVerleih = {"ID","ISBN", "Titel","Autor","Beschreibung","Verlag"};
-    String[][] buchVerleih = {{"","","","","",""}};
+    JButton btnVerleihDel = null;
+    
     JTable buchListeVerleih = new JTable(buch,columnNamesBuch);
+    
+    String[] columnNamesLeserVerleih = {"ID","Name", "Nachname","Strasse&HN","PLZ","Ort"};
+    String[][] leserVerleih = {{"","","","","",""}};
+    JTable leserListeVerleih = new JTable(leserVerleih,columnNamesLeserVerleih);
+    
     String[][] ausleiheZeile = {{"","","","","",""}};
     String[] columnNamesAusleihe = {"Vorname","Nachname","Titel","Autor","Ausleihdatum","Rueckgabedatum"};
     JTable buchListeAusleihe = new JTable(ausleiheZeile,columnNamesAusleihe);
+    
     DefaultTableModel tmAusleihe;
     
 	public BIB_Haupt(){
@@ -252,7 +252,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
 		    hilfsComp.add( btnBuchNew );
 	        
 	        btnBuchDel = new JButton( "del" );
-	        btnBuchDel.setActionCommand( "delOrt" );
+	        btnBuchDel.setActionCommand( "delBuch" );
 	        btnBuchDel.setBounds( 300, 200, 75, 22 );
 	        btnBuchDel.addActionListener( this );
 	        hilfsComp.add( btnBuchDel );
@@ -317,65 +317,34 @@ public Component initVerleihe(){
 		
 	
 	Container hilfsComp = new Container();
-	
-    JLabel lblList = new JLabel( "Ausleihen:" );
-    lblList.setBounds( 15, 15, 75, 24 );
-    hilfsComp.add( lblList );
-
-    
+		
     buchListeAusleihe.addMouseListener( this );
     buchListeAusleihe.addKeyListener( this );
-    
-    //JScrollPane buchListeScrollPane = new JScrollPane( buchListeAusleihe );
-    buchListeAusleihe.setBounds( 100, 15, 275, 150 );
+    JScrollPane ortListeScrollPane = new JScrollPane( buchListeAusleihe );
+    ortListeScrollPane.setBounds( 100, 15, 275, 150 );
     buchListeAusleihe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( buchListeAusleihe );
-
-	
-	 
-	JLabel lblAusleihenLeser = new JLabel( "Leser:" );
-	lblAusleihenLeser.setBounds( 15, 250, 75, 24 );
-    hilfsComp.add( lblAusleihenLeser );
-
-    leserListeVerleih.addMouseListener( this );
-    leserListeVerleih.addKeyListener( this );
+    hilfsComp.add( ortListeScrollPane );
     
-    leserListeVerleih.setBounds( 100, 250, 275, 150 );
-    leserListeVerleih.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( leserListeVerleih );
-    
-    JLabel lblAusleihenBuch = new JLabel( "Bücher:" );
-    lblAusleihenBuch.setBounds( 400, 250, 75, 24 );
-    hilfsComp.add( lblAusleihenBuch );
-    
-    
-    buchListeAusleihe.addMouseListener( this );
+   /*buchListeAusleihe.addMouseListener( this );
     buchListeAusleihe.addKeyListener( this );
-    buchListeAusleihe.setBounds( 485, 250, 275, 150 );
+    JScrollPane ortListeScrollPane = new JScrollPane( buchListeAusleihe );
+    ortListeScrollPane.setBounds( 100, 15, 275, 150 );
     buchListeAusleihe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-    hilfsComp.add( buchListeAusleihe );
-
-    btnVerleihEdit = new JButton( "edit" );
-    btnVerleihEdit.setActionCommand( "editVerleih" );
-    btnVerleihEdit.setBounds( 100, 190, 75, 22 );
-    btnVerleihEdit.addActionListener( this );
-    hilfsComp.add( btnVerleihEdit );
+    hilfsComp.add( ortListeScrollPane );*/
     
-    btnVerleihNew = new JButton( "new" );
-    btnVerleihNew.setActionCommand( "newVerleih" );
-    btnVerleihNew.setBounds( 200, 420, 75, 22 );
-    btnVerleihNew.addActionListener( this );
-    hilfsComp.add( btnVerleihNew ); 
+    buchListeVerleih.addMouseListener( this );
+    buchListeVerleih.addKeyListener( this );
+    JScrollPane ortListePane = new JScrollPane( buchListeVerleih );
+    ortListeScrollPane.setBounds( 100, 300, 275, 150 );
+    buchListeAusleihe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+    hilfsComp.add( ortListePane );
     
-    btnBuchDel = new JButton( "del" );
-    btnBuchDel.setActionCommand( "delVerleih" );
-    btnBuchDel.setBounds( 300, 190, 75, 22 );
-    btnBuchDel.addActionListener( this );
-    hilfsComp.add( btnBuchDel );
+    
 
-        		 
-	
+     
    return hilfsComp;
+	
+
 	
 
 	}
@@ -423,8 +392,8 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 		int selectedRow = 0;
 		
 		if("speichernBuch".equals(cmd)){
-			this.controller.setBuch((Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "")),txtBuchISBN.getText(),txtBuchAutor.getText(),
-					txtBuchBeschreibung.getText(), txtBuchTitel.getText(),txtBuchVerlag.getText());
+			this.controller.setBuch((Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "")),txtBuchISBN.getText(),txtBuchTitel.getText(),txtBuchAutor.getText(),
+					txtBuchBeschreibung.getText(), txtBuchVerlag.getText());
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 			txtBuchISBN.setText("");
 			txtBuchAutor.setText("");
@@ -435,6 +404,7 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			btnBuchEditStore.setVisible(false);			
 		}
 		else if("newBuch".equals(cmd)){
+			System.out.println("Buch.getAnzahlBuecher()"+ Buch.getAnzahlBuecher());
 			this.controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(),txtBuchAutor.getText(),
 					txtBuchBeschreibung.getText(), txtBuchTitel.getText(),txtBuchVerlag.getText());
 			txtBuchISBN.setText("");
@@ -465,6 +435,12 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 			txtBuchVerlag.setText("");
 			btnBuchAbort.setVisible(false);
 			btnBuchEditStore.setVisible(false);
+		}
+		else if("delBuch".equals(cmd)){
+			int i = Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "");
+			this.controller.removeBuch(controller.getBuchByID(i));
+			this.refreshBuchTable(this.controller.getAlleBuecher());
+				
 		}
 		else if("delLeser".equals(cmd)){
 			int i = Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "");

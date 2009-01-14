@@ -93,5 +93,8 @@ public class Buch {
 		this.leihe = leihe;
 	}
 	
+	public String toString(){
+		return "ID: " + id + " Autor: " + autor + " ISBN: " + isbn;
+	}
 
 }
