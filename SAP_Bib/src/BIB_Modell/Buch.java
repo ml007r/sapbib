@@ -13,8 +13,32 @@ public class Buch {
 	private String autor;
 	private String beschreibung;
 	private String verlag;
-	private boolean leihe;
+	private boolean verleihStatus;
 
+	public Buch(String isbn, String titel, String autor,
+			String beschreibung, String verlag, boolean verleih) {
+		super();
+		this.id = anzahlBuecher;
+		this.isbn = isbn;
+		this.titel = titel;
+		this.autor = autor;
+		this.beschreibung = beschreibung;
+		this.verlag = verlag;
+		this.verleihStatus = verleih;
+		anzahlBuecher++;
+	}
+	public Buch(int id, String isbn, String titel, String autor,
+			String beschreibung, String verlag, boolean verleih) {
+		super();
+		this.id = id;
+		this.isbn = isbn;
+		this.titel = titel;
+		this.autor = autor;
+		this.beschreibung = beschreibung;
+		this.verlag = verlag;
+		this.verleihStatus = verleih;
+		anzahlBuecher++;
+	}
 	public Buch(String isbn, String titel, String autor,
 			String beschreibung, String verlag) {
 		super();
@@ -24,7 +48,7 @@ public class Buch {
 		this.autor = autor;
 		this.beschreibung = beschreibung;
 		this.verlag = verlag;
-		this.leihe = true;
+		this.verleihStatus = true;
 		anzahlBuecher++;
 	}
 	public Buch(int id, String isbn, String titel, String autor,
@@ -36,18 +60,16 @@ public class Buch {
 		this.autor = autor;
 		this.beschreibung = beschreibung;
 		this.verlag = verlag;
-		this.leihe = true;
+		this.verleihStatus = true;
 		anzahlBuecher++;
 	}
-	
-	public Buch(){
-		
-	}
+
 	public static int getAnzahlBuecher() {
 		return anzahlBuecher;
 	}
 	public static void setAnzahlBuecher(int anzahlBuecher) {
 		Buch.anzahlBuecher = anzahlBuecher;
+		System.out.println("Aufruf: setAnzahlBuecher" + anzahlBuecher);
 	}
 	
 	public int getId() {
@@ -86,11 +108,11 @@ public class Buch {
 	public void setVerlag(String verlag) {
 		this.verlag = verlag;
 	}
-	public boolean isLeihe() {
-		return leihe;
+	public boolean getVerleihStatus() {
+		return verleihStatus;
 	}
 	public void setLeihe(boolean leihe) {
-		this.leihe = leihe;
+		this.verleihStatus = leihe;
 	}
 	
 	public String toString(){

@@ -1,6 +1,7 @@
 package BIB_GUI;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.TreeMap;
 
 import com.sap.mw.jco.*;
 
-import BIB_Modell.Ausleihe;
+import BIB_Modell.Verleih;
 import BIB_Modell.Buch;
 import BIB_Modell.Leser;
 
@@ -17,7 +18,7 @@ public class BIB_Steuer {
 	
 	private  ArrayList<Leser> alleLeser = new ArrayList<Leser>();
 	private  ArrayList<Buch> alleBuecher = new ArrayList<Buch>();
-	private  ArrayList<Ausleihe> alleAusleihen = new ArrayList<Ausleihe>();
+	private  ArrayList<Verleih> alleVerleihen = new ArrayList<Verleih>();
 	private JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
 	Leser hilfsLeser;
 	
@@ -42,13 +43,7 @@ public class BIB_Steuer {
 		this.alleBuecher = alleBuecher;
 	}
 
-	public ArrayList<Ausleihe> getAlleAusleihen() {
-		return alleAusleihen;
-	}
 
-	public void setAlleAusleihen(ArrayList<Ausleihe> alleAusleihen) {
-		this.alleAusleihen = alleAusleihen;
-	}
 	
 	// Methoden zur Pflege der Leser
 	public void addLeser(String vorname, String nachname, String strasse,
@@ -206,16 +201,7 @@ public class BIB_Steuer {
 		this.alleBuecher = null;
 	}
 	
-	// Methoden zur Pflege der Ausleihen
-	public void addAusleihe(Ausleihe ausleihe){
-		this.alleAusleihen.add(ausleihe);
-	}
-	public void removeAusleihe(Ausleihe ausleihe){
-		this.alleAusleihen.remove(ausleihe);
-	}
-	public void removeAllAusleihe(){
-		this.alleAusleihen = null;
-	}
+
 	public void oeffneDaten(){
 		// eine Instanz der Demo-Klasse erstellen
 		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
@@ -230,6 +216,7 @@ public class BIB_Steuer {
 
 			this.alleBuecher = jcd.oeffneBuch();
 			this.alleLeser = jcd.oeffneLeser();
+			this.alleVerleihen = jcd.oeffneVerleih();
 			//System.out.println("Letzter Leser: " + jcd.letzterLeser());
 			//Leser.setAnzahlLeser(jcd.letzterLeser());
 			//System.out.println("Letztes Buch: " + jcd.letztesBuch());
@@ -257,6 +244,14 @@ public class BIB_Steuer {
 			jcd.schliesseVerbindungsPool();
 		}
 	}
+	public ArrayList<Verleih> getAlleVerleihen() {
+		return alleVerleihen;
+	}
+
+	public void setAlleVerleihen(ArrayList<Verleih> alleVerleihen) {
+		this.alleVerleihen = alleVerleihen;
+	}
+
 	// Methoden zur Pflege der Leser
 	public void addLeser(int i, String vorname, String nachname, String strasse,
 														String plz, String ort) {
@@ -323,6 +318,33 @@ public class BIB_Steuer {
 			jcd.schliesseVerbindungsPool();
 		}
 		
+	}
+
+	public void addVerleih(int id, Date ausleihdatum, Date rueckgabedatum,
+			int derLeser, int dasBuch) {
+		
+		Verleih hilfsVerleih = new Verleih(id, ausleihdatum, rueckgabedatum, derLeser, dasBuch);
+		this.alleVerleihen.add(hilfsVerleih);
+		
+			// eine Instanz der Demo-Klasse erstellen
+			JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+			
+			
+			// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+			// eine Referenz zum Repository des SAP-Systems anfordern
+			 
+			jcd.erstelleVerbindungsPool();
+			
+			try {
+				jcd.schreibeVerleih(hilfsVerleih);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+		
+				System.out.println("Schreiben des Buches fehlgeschlagen!!!! " + e.getMessage());
+			}
+			finally{
+				jcd.schliesseVerbindungsPool();
+			}
 	}
 
 	
