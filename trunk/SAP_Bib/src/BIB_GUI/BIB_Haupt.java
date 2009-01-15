@@ -96,8 +96,62 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     String[][] verleihZeile = {{"","","","",""}};
     JTable verleihListe = new JTable(verleihZeile,columnNamesVerleih);
     DefaultTableModel tmVerleih;
+   
+    private static BIB_Haupt instance = null;
     
-	public BIB_Haupt(){
+    protected BIB_Haupt() {
+    	super();
+		this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        
+        JTabbedPane tp = new JTabbedPane();
+        
+        tp.addTab("Leser", initLeser());   
+        tp.addTab("Medium", initBuch());
+        tp.addTab("Ausleihe", initVerleihe());      
+        tp.addKeyListener(this);
+        this.add(tp);
+        txtKdName.setText("");
+        this.addKeyListener(this);
+        
+		System.out.println();
+               
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu menuDatei = new JMenu( "Datei" );
+        JMenuItem menuItemOeffnen = new JMenuItem( "Oeffnen" );
+        menuItemOeffnen.addActionListener( this );
+        menuDatei.add( menuItemOeffnen );
+        JMenuItem menuItemSpeichern = new JMenuItem( "Speichern" );
+        menuItemSpeichern.addActionListener( this );
+        menuDatei.add( menuItemSpeichern );
+        JMenuItem menuItemBeenden = new JMenuItem( "Beenden" );
+        menuItemBeenden.addActionListener( this );
+        menuDatei.add( menuItemBeenden );
+
+        menuBar.add( menuDatei );
+
+        this.setJMenuBar( menuBar );
+
+        this.pack();
+        this.setSize( 800, 600 );
+        this.setVisible(true);
+        System.out.println("");
+        this.controller.oeffneDaten();
+		if(this.controller.getAlleBuecher().size() != 0){
+			this.refreshBuchTable(this.controller.getAlleBuecher());
+		}
+		this.refreshLeserTable(this.controller.getAlleLeser());
+		this.refreshVerleihTable(this.controller.getAlleVerleihen());
+    }
+    public static BIB_Haupt getInstance() {
+       if(instance == null) {
+          instance = new BIB_Haupt();
+       }
+       return instance;
+    }
+
+    // alter Konstruktor...
+	/*public BIB_Haupt(){
 		super();
 		this.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         
@@ -134,9 +188,13 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
         this.setSize( 800, 600 );
         this.setVisible(true);
         System.out.println("");
-        
-	}
-
+        this.controller.oeffneDaten();
+		if(this.controller.getAlleBuecher().size() != 0){
+			this.refreshBuchTable(this.controller.getAlleBuecher());
+		}
+		this.refreshLeserTable(this.controller.getAlleLeser());
+		this.refreshVerleihTable(this.controller.getAlleVerleihen());
+	}*/
 	 
 	public Component initLeser(){
 				
@@ -404,52 +462,53 @@ public void refreshLeserTable(ArrayList<Leser> les){
 	    	}
 	        
 	    }
+	    leserListe.setModel( tmLeser );
+	    leserVerleih.setModel(tmLeser);
     }
-    leserListe.setModel( tmLeser );
-    leserVerleih.setModel(tmLeser);
-	
 }
 
 public void refreshBuchTable(ArrayList<Buch> buch){
-    tmBuch = new DefaultTableModel(columnNamesBuch,0);
-    int i = 0;
-    for ( Buch bu : buch )
-    {
-        System.out.println("Buch objekt gefunden!");
-        String[] hilfsString = {bu.getId()+"", bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
-    	tmBuch.insertRow(i, hilfsString);
-    	i++;
-        
-    }
-    buchListe.setModel( tmBuch );
-    tmBuchVerleih = new DefaultTableModel(columnNamesBuchVerleih,0);
-    int j = 0;
-    for ( Buch bu : buch )
-    {
-        if(bu.getVerleihStatus()){
-	    	System.out.println("Buch objekt gefunden mit verleihStatus true!");
+    if(!buch.isEmpty()){
+		tmBuch = new DefaultTableModel(columnNamesBuch,0);
+	    int i = 0;
+	    for ( Buch bu : buch )
+	    {
+	        System.out.println("Buch objekt gefunden!");
 	        String[] hilfsString = {bu.getId()+"", bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
-	        tmBuchVerleih.insertRow(j, hilfsString);
-	    	j++;
-        }        
+	    	tmBuch.insertRow(i, hilfsString);
+	    	i++;
+	        
+	    }
+	    buchListe.setModel( tmBuch );
+	    tmBuchVerleih = new DefaultTableModel(columnNamesBuchVerleih,0);
+	    int j = 0;
+	    for ( Buch bu : buch )
+	    {
+	        if(bu.getVerleihStatus()){
+		    	System.out.println("Buch objekt gefunden mit verleihStatus true!");
+		        String[] hilfsString = {bu.getId()+"", bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
+		        tmBuchVerleih.insertRow(j, hilfsString);
+		    	j++;
+	        }        
+	    }
+	    buchVerleih.setModel(tmBuchVerleih);
     }
-    buchVerleih.setModel(tmBuchVerleih);
-	
 }
 
 public void refreshVerleihTable(ArrayList<Verleih> verleih){
-    tmVerleih = new DefaultTableModel(columnNamesVerleih,0);
-    int i = 0;
-    for ( Verleih ver : verleih )
-    {
-        System.out.println("Verleih objekt gefunden!");
-        String[] hilfsString = {ver.getId()+"",ver.getDasBuch()+"",ver.getDerLeser()+"", ver.getAusleihdatum(), ver.getRueckgabedatum()};
-    	tmVerleih.insertRow(i, hilfsString);
-    	i++;
-        
-    }
-    verleihListe.setModel( tmVerleih );
-	
+    if(!verleih.isEmpty()){
+		tmVerleih = new DefaultTableModel(columnNamesVerleih,0);
+	    int i = 0;
+	    for ( Verleih ver : verleih )
+	    {
+	        System.out.println("Verleih objekt gefunden!");
+	        String[] hilfsString = {ver.getId()+"",ver.getDasBuch()+"",ver.getDerLeser()+"", ver.getAusleihdatum(), ver.getRueckgabedatum()};
+	    	tmVerleih.insertRow(i, hilfsString);
+	    	i++;
+	        
+	    }
+	    verleihListe.setModel( tmVerleih );
+    }	
 }
 
 	@Override
@@ -592,12 +651,12 @@ public void refreshVerleihTable(ArrayList<Verleih> verleih){
 		}
 		else if("Oeffnen".equals(cmd)){
 			System.out.println("Hier oeffnen");
-			this.controller.oeffneDaten();
+			/*this.controller.oeffneDaten();
 			if(this.controller.getAlleBuecher().size() != 0){
 				this.refreshBuchTable(this.controller.getAlleBuecher());
 			}
 			this.refreshLeserTable(this.controller.getAlleLeser());
-			this.refreshVerleihTable(this.controller.getAlleVerleihen());
+			this.refreshVerleihTable(this.controller.getAlleVerleihen());*/
 		}
 		else if("newBuch".equals(cmd)){					
 				controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(), txtBuchAutor.getText(), 
