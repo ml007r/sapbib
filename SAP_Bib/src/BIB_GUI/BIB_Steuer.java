@@ -271,7 +271,7 @@ public class BIB_Steuer implements Runnable{
 														String plz, String ort) {
 		hilfsLeser = new Leser(i,vorname, nachname, strasse,plz, ort);
 		this.alleLeser.add(hilfsLeser);
-		System.out.println("HilfsLeser.getID() " + hilfsLeser.getId());
+		//System.out.println("HilfsLeser.getID() " + hilfsLeser.getId());
 		
 			// eine Instanz der Demo-Klasse erstellen
 			JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
@@ -338,7 +338,7 @@ public class BIB_Steuer implements Runnable{
 			int derLeser, int dasBuch) {
 		
 		Verleih hilfsVerleih = new Verleih(id, ausleihdatum, rueckgabedatum, derLeser, dasBuch);
-	System.out.println(ausleihdatum+ "" + rueckgabedatum);
+		//System.out.println(ausleihdatum+ "" + rueckgabedatum);
 		this.alleVerleihen.add(hilfsVerleih);
 		
 			// eine Instanz der Demo-Klasse erstellen
