@@ -22,10 +22,10 @@ import BIB_Modell.Leser;
 
 
 public class BIB_Haupt extends JFrame
-implements ActionListener, MouseListener, ListSelectionListener, KeyListener
+implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Runnable
 {
 	// Controller
-	private BIB_Steuer controller = new BIB_Steuer();
+	private BIB_Steuer controller = BIB_Steuer.getInstance();
 	/**
 	 * 
 	 */
@@ -98,6 +98,11 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener
     DefaultTableModel tmVerleih;
    
     private static BIB_Haupt instance = null;
+    
+    @Override
+	public void run() {
+		BIB_Haupt.getInstance();
+		}
     
     protected BIB_Haupt() {
     	super();
@@ -726,4 +731,5 @@ public void refreshVerleihTable(ArrayList<Verleih> verleih){
 		// TODO Auto-generated method stub
 		//System.out.println("***keyTyped*** " + arg0.toString());
 	}
+	
 }

@@ -11,7 +11,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		bib = new BIB_Haupt();
+		BIB_Haupt.getInstance();
 		//System.out.println(bib.getTp().getSelectedComponent().getName().toString());
 	}
 	
