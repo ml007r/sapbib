@@ -6,14 +6,14 @@ public class Verleih {
 
 	private static int anzahlVerleihen;
 	private int id;
-	private Date ausleihdatum;
-	private Date rueckgabedatum;
+	private String ausleihdatum;
+	private String rueckgabedatum;
 	private int derLeser;
 	private int dasBuch;
 	//private Date frist;
 	
 	
-	public Verleih(int id, Date ausleihdatum, Date rueckgabedatum,
+	public Verleih(int id, String ausleihdatum, String rueckgabedatum,
 			int derLeser, int dasBuch) {
 		super();
 		this.id = id;
@@ -39,16 +39,16 @@ public class Verleih {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Date getAusleihdatum() {
+	public String getAusleihdatum() {
 		return ausleihdatum;
 	}
-	public void setAusleihdatum(Date ausleihdatum) {
+	public void setAusleihdatum(String ausleihdatum) {
 		this.ausleihdatum = ausleihdatum;
 	}
-	public Date getRueckgabedatum() {
+	public String getRueckgabedatum() {
 		return rueckgabedatum;
 	}
-	public void setRueckgabedatum(Date rueckgabedatum) {
+	public void setRueckgabedatum(String rueckgabedatum) {
 		this.rueckgabedatum = rueckgabedatum;
 	}
 	public int getDerLeser() {

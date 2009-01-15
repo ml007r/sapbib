@@ -367,10 +367,10 @@ public class JCoDemoConPoolNew {
 			System.out.println(x);
 			Verleih.setAnzahlVerleihen(export.getField("LETZTER").getInt()+1);
 			x.firstRow();
-			verleih.add(new Verleih(x.getField("ID").getInt(), x.getField("AUSLEIH_DATUM").getDate(), x.getField("RUECKGABE_DATUM").getDate(),
+			verleih.add(new Verleih(x.getField("ID").getInt(), x.getField("AUSLEIH_DATUM").getString(), x.getField("RUECKGABE_DATUM").getString(),
 					x.getField("LESER_ID").getInt(),x.getField("BUCH_ID").getInt()));
 			while(x.nextRow()){
-				verleih.add(new Verleih(x.getField("ID").getInt(), x.getField("AUSLEIHDATUM").getDate(), x.getField("RUECKGABEDATUM").getDate(),
+				verleih.add(new Verleih(x.getField("ID").getInt(), x.getField("AUSLEIH_DATUM").getString(), x.getField("RUECKGABE_DATUM").getString(),
 						x.getField("LESER_ID").getInt(),x.getField("BUCH_ID").getInt()));
 			}
 			
