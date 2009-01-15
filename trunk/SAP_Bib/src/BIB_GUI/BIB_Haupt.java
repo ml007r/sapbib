@@ -430,8 +430,8 @@ public Component initVerleihe(){
     hilfsComp.add( btnVerleihNew );
     btnVerleihNew.setVisible(true);
     
-    btnVerleihEdit = new JButton( "edit" );
-    btnVerleihEdit.setActionCommand( "editVerleih" );
+    btnVerleihEdit = new JButton( "return" );
+    btnVerleihEdit.setActionCommand( "returnVerleih" );
     btnVerleihEdit.setBounds( 100,430, 75, 22 );
     btnVerleihEdit.addActionListener( this );
     hilfsComp.add( btnVerleihEdit );
@@ -607,6 +607,12 @@ public void setController(BIB_Steuer controller) {
 			this.refreshLeserTable(this.controller.getAlleLeser());
 			btnLeserEditStore.setVisible(false);
 			btnLeserAbort.setVisible(false);			
+		}
+		else if("returnVerleih".equals(cmd)){
+				
+		}
+		else if("delVerleih".equals(cmd)){
+			
 		}
 		else if ("abbrechenBuch".equals(cmd)){
 			txtBuchISBN.setText("");
