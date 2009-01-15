@@ -14,6 +14,7 @@ import BIB_Modell.Verleih;
 import BIB_Modell.Buch;
 import BIB_Modell.Leser;
 
+
 /**
  * Demonstrationsklasse zur Nutzung eines RFC-fähigen ABAP-Funktionsbausteines
  * mit JCo.
@@ -24,6 +25,18 @@ import BIB_Modell.Leser;
  * @version 0.4
  */
 public class JCoDemoConPoolNew {
+
+	private static JCoDemoConPoolNew instance = null;
+	   
+	protected JCoDemoConPoolNew() {
+		   this("StdConPoolId");
+	   }
+	   public static JCoDemoConPoolNew getInstance() {
+	      if(instance == null) {
+	         instance = new JCoDemoConPoolNew();
+	      }
+	      return instance;
+	   }
 
 
 	/**
@@ -42,9 +55,9 @@ public class JCoDemoConPoolNew {
 	 * Der Std.-Konstruktor; Er Nutzt die Connection-Pool-Kennzeichnung
 	 * "StdConPoolId" zur Initialisierung des Objekts.
 	 */
-	public JCoDemoConPoolNew() {
+	/*public JCoDemoConPoolNew() {
 		this("StdConPoolId");
-	}
+	}*/
 
 	/**
 	 * Der typische Konstruktor.
@@ -89,12 +102,12 @@ public class JCoDemoConPoolNew {
 		}
 		else
 		{
-			System.out.println("PoolCurrentSize: " +pool.getCurrentPoolSize());
+			/*System.out.println("PoolCurrentSize: " +pool.getCurrentPoolSize());
 			System.out.println("PoolMaxSize: " +pool.getMaxPoolSize());
 			System.out.println("PoolMaxConnections: " +pool.getMaxConnections());
 			System.out.println("PoolName: " +pool.getName());
 			System.out.println("PoolTimeOutCheckPeriod: " +pool.getTimeoutCheckPeriod());
-			System.out.println("PoolCurrentSize: " +pool.getCurrentPoolSize());
+			System.out.println("PoolCurrentSize: " +pool.getCurrentPoolSize());*/
 		}
 		
 	}
@@ -223,16 +236,16 @@ public class JCoDemoConPoolNew {
 			// Den EXPORT Wert "RETURN" als Double zurückgeben
 
 			Table x = function.getTableParameterList().getTable("BUCH");
-			System.out.println("letztes Buch: " + export.getField("LETZTES").getInt());
+			//System.out.println("letztes Buch: " + export.getField("LETZTES").getInt());
 			Buch.setAnzahlBuecher(export.getField("LETZTES").getInt());
-			System.out.println(x);
+			//System.out.println(x);
 			x.firstRow();
 			if(x.getField("VERLEIHSTATUS").getChar() != 'X'){
 				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString(), true));
 			}
 			else{ 
 				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString(),false));
-				System.out.println("verliehenes Buch");
+				//System.out.println("verliehenes Buch");
 			}
 			while(x.nextRow()){
 			if(x.getField("VERLEIHSTATUS").getChar() != 'X'){
@@ -240,10 +253,10 @@ public class JCoDemoConPoolNew {
 			}
 			else{
 				buch.add(new Buch(x.getField("ID").getInt(), x.getField("ISBN").getString(),x.getField("TITEL").getString(),x.getField("AUTOR").getString(),x.getField("BESCHREIBUNG").getString(),x.getField("VERLAG").getString(), false));
-				System.out.println("verliehenes Buch");
+				//System.out.println("verliehenes Buch");
 			}
 			Buch.setAnzahlBuecher(export.getField("LETZTES").getInt()+1);
-			System.out.println("letztes Buch: " + export.getField("LETZTES").getInt());
+			//System.out.println("letztes Buch: " + export.getField("LETZTES").getInt());
 			}
 //			
 
@@ -301,14 +314,14 @@ public class JCoDemoConPoolNew {
 			// Den EXPORT Wert "RETURN" als Double zurückgeben
 			
 			Table x = function.getTableParameterList().getTable("LESER");
-			System.out.println(x);
+			//System.out.println(x);
 			x.firstRow();
 			leser.add(new Leser(x.getField("ID").getInt(),x.getField("VORNAME").getString(),x.getField("NAME").getString(),x.getField("STRASSE").getString(),x.getField("PLZ").getString(),x.getField("ORT").getString()));
 			while(x.nextRow()){
 				leser.add(new Leser(x.getField("ID").getInt(),x.getField("VORNAME").getString(),x.getField("NAME").getString(),x.getField("STRASSE").getString(),x.getField("PLZ").getString(),x.getField("ORT").getString()));
 			}
 			Leser.setAnzahlLeser(export.getField("LETZTER").getInt()+1);
-			System.out.println("Letzter Leser:" + export.getField("LETZTER").getInt());
+			//System.out.println("Letzter Leser:" + export.getField("LETZTER").getInt());
 
 		} finally {
 
@@ -364,7 +377,7 @@ public class JCoDemoConPoolNew {
 			// Den EXPORT Wert "RETURN" als Double zurückgeben
 			
 			Table x = function.getTableParameterList().getTable("VERLEIH");
-			System.out.println(x);
+			//System.out.println(x);
 			Verleih.setAnzahlVerleihen(export.getField("LETZTER").getInt()+1);
 			x.firstRow();
 			verleih.add(new Verleih(x.getField("ID").getInt(), x.getField("AUSLEIH_DATUM").getString(), x.getField("RUECKGABE_DATUM").getString(),
@@ -430,7 +443,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_LESER_SCHREIBEN");
+			//System.out.println("ZZZ_LESER_SCHREIBEN");
 
 			
 					
@@ -490,7 +503,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_Buch_SCHREIBEN");
+			//System.out.println("ZZZ_Buch_SCHREIBEN");
 
 			
 					
@@ -545,7 +558,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_LESER_SCHREIBEN");
+			//System.out.println("ZZZ_LESER_SCHREIBEN");
 
 			
 					
@@ -602,7 +615,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_LESER_SCHREIBEN");
+			//System.out.println("ZZZ_LESER_SCHREIBEN");
 
 			
 					
@@ -653,7 +666,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_LESER_letzter");
+			//System.out.println("ZZZ_LESER_letzter");
 			i = export.getField("letzter").getInt();
 			
 					
@@ -704,7 +717,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_Buch_letztes");
+			//System.out.println("ZZZ_Buch_letztes");
 			i = export.getField("letztes").getInt();
 			
 					
@@ -753,7 +766,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_BUCH_AENDERN");
+			//System.out.println("ZZZ_BUCH_AENDERN");
 
 			
 					
@@ -805,7 +818,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_BUCH_SCHREIBEN");
+			//System.out.println("ZZZ_BUCH_SCHREIBEN");
 
 			
 					
@@ -859,7 +872,7 @@ public class JCoDemoConPoolNew {
 
 			// Die Funktion synchron beim Remote-System ausführen
 			client.execute(function);
-			System.out.println("ZZZ_VERLEIH_SCHREIBEN");
+			//System.out.println("ZZZ_VERLEIH_SCHREIBEN");
 
 			
 					

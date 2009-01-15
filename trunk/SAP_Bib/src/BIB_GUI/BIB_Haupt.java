@@ -25,7 +25,7 @@ public class BIB_Haupt extends JFrame
 implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Runnable
 {
 	// Controller
-	private BIB_Steuer controller = BIB_Steuer.getInstance();
+	private BIB_Steuer controller = null;
 	/**
 	 * 
 	 */
@@ -122,7 +122,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Ru
                
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu menuDatei = new JMenu( "Datei" );
+        /*JMenu menuDatei = new JMenu( "Datei" );
         JMenuItem menuItemOeffnen = new JMenuItem( "Oeffnen" );
         menuItemOeffnen.addActionListener( this );
         menuDatei.add( menuItemOeffnen );
@@ -135,18 +135,17 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Ru
 
         menuBar.add( menuDatei );
 
-        this.setJMenuBar( menuBar );
+        this.setJMenuBar( menuBar );*/
 
         this.pack();
         this.setSize( 800, 600 );
         this.setVisible(true);
-        System.out.println("");
-        this.controller.oeffneDaten();
-		if(this.controller.getAlleBuecher().size() != 0){
+        //this.controller.oeffneDaten();
+		/*if(this.controller.getAlleBuecher().size() != 0){
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 		}
 		this.refreshLeserTable(this.controller.getAlleLeser());
-		this.refreshVerleihTable(this.controller.getAlleVerleihen());
+		this.refreshVerleihTable(this.controller.getAlleVerleihen());*/
     }
     public static BIB_Haupt getInstance() {
        if(instance == null) {
@@ -515,7 +514,16 @@ public void refreshVerleihTable(ArrayList<Verleih> verleih){
 	    verleihListe.setModel( tmVerleih );
     }	
 }
+public BIB_Steuer getController() {
+	return controller;
+}
 
+public void setController(BIB_Steuer controller) {
+	this.controller = controller;
+	this.refreshBuchTable(BIB_Steuer.getInstance().getAlleBuecher());
+	this.refreshLeserTable(BIB_Steuer.getInstance().getAlleLeser());
+	this.refreshVerleihTable(BIB_Steuer.getInstance().getAlleVerleihen());
+}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();

@@ -10,9 +10,20 @@ public class Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		BIB_Haupt.getInstance();
-		//System.out.println(bib.getTp().getSelectedComponent().getName().toString());
+		Thread t1 =   new Thread( BIB_Steuer.getInstance() );
+	      t1.start();
+	      
+	      try {
+			Thread.sleep(2800);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Thread t2 =   new Thread( BIB_Haupt.getInstance() );
+		
+		BIB_Haupt.getInstance().setController(BIB_Steuer.getInstance());
+
+	 
 	}
 	
 	
