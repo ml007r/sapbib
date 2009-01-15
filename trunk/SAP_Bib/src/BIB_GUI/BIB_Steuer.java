@@ -14,7 +14,7 @@ import BIB_Modell.Buch;
 import BIB_Modell.Leser;
 
 
-public class BIB_Steuer {
+public class BIB_Steuer implements Runnable{
 	
 	private  ArrayList<Leser> alleLeser = new ArrayList<Leser>();
 	private  ArrayList<Buch> alleBuecher = new ArrayList<Buch>();
@@ -22,10 +22,24 @@ public class BIB_Steuer {
 	private JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
 	Leser hilfsLeser;
 	
+	private static BIB_Steuer instance = null;
+	  
+	public static BIB_Steuer getInstance() {
+	      if(instance == null) {
+	         instance = new BIB_Steuer();
+	      }
+	      return instance;
+	}
 	
-	public BIB_Steuer(){
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
 		
 	}
+
+
+	
+	protected BIB_Steuer(){	}
 
 	public ArrayList<Leser> getAlleLeser() {
 		return alleLeser;
@@ -352,7 +366,4 @@ public class BIB_Steuer {
 		b.setLeihe(false);
 		
 	}
-
-	
-
 }
