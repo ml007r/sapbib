@@ -320,10 +320,11 @@ public class BIB_Steuer {
 		
 	}
 
-	public void addVerleih(int id, Date ausleihdatum, Date rueckgabedatum,
+	public void addVerleih(int id, String ausleihdatum, String rueckgabedatum,
 			int derLeser, int dasBuch) {
 		
 		Verleih hilfsVerleih = new Verleih(id, ausleihdatum, rueckgabedatum, derLeser, dasBuch);
+	System.out.println(ausleihdatum+ "" + rueckgabedatum);
 		this.alleVerleihen.add(hilfsVerleih);
 		
 			// eine Instanz der Demo-Klasse erstellen
@@ -345,6 +346,11 @@ public class BIB_Steuer {
 			finally{
 				jcd.schliesseVerbindungsPool();
 			}
+	}
+	public void aendernBuchStatus(int buch){
+		Buch b = this.getBuchByID(buch);
+		b.setLeihe(false);
+		
 	}
 
 	

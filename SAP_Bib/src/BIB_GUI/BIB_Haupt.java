@@ -8,9 +8,13 @@ import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import BIB_Modell.Verleih;
 import BIB_Modell.Buch;
@@ -439,7 +443,7 @@ public void refreshVerleihTable(ArrayList<Verleih> verleih){
     for ( Verleih ver : verleih )
     {
         System.out.println("Verleih objekt gefunden!");
-        String[] hilfsString = {ver.getId()+"",ver.getDasBuch()+"",ver.getDerLeser()+"", ver.getAusleihdatum().toLocaleString().substring(0, 10), ver.getRueckgabedatum().toLocaleString().substring(0, 10)};
+        String[] hilfsString = {ver.getId()+"",ver.getDasBuch()+"",ver.getDerLeser()+"", ver.getAusleihdatum(), ver.getRueckgabedatum()};
     	tmVerleih.insertRow(i, hilfsString);
     	i++;
         
@@ -470,10 +474,43 @@ public void refreshVerleihTable(ArrayList<Verleih> verleih){
 			btnBuchEditStore.setVisible(false);			
 		}
 		else if("newVerleih".equals(cmd)){
-			/*this.controller.setVerleih(Verleih.getAnzahlVerleihen(),System.get, Date rueckgabedatum,
-					int derLeser, int dasBuch);*/
-			String now = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date());
-			System.out.println(now);
+			Calendar myCal2 = new GregorianCalendar();
+			String aktDatum;
+			String rueckDatum;
+			int aktTag = myCal2.get(Calendar.DAY_OF_MONTH);
+			int aktMonat = myCal2.get(Calendar.MONTH)+1;
+			int aktJahr = myCal2.get(Calendar.YEAR);
+			System.out.println(aktJahr);
+			if (aktMonat<= 9){
+				aktDatum = aktTag + ".0" + aktMonat + "." + aktJahr;
+			}
+			else{
+				aktDatum = aktTag + "." + aktMonat + "." + aktJahr;
+			}
+			
+			if (aktMonat == 12){
+				aktMonat = 0;
+				aktJahr += 1;
+			}
+			if (aktMonat == 12){
+				aktMonat = 0;
+				aktJahr += 1;
+			}
+			int rueckMonat = aktMonat + 1;
+			
+			if (aktMonat<= 9){
+				rueckDatum = aktTag + ".0" + rueckMonat + "." + aktJahr;
+			}
+			else{
+				rueckDatum = aktTag + ".0" + rueckMonat + "." + aktJahr;
+			}
+			
+			int buch = (Integer.parseInt(tmBuchVerleih.getValueAt(buchVerleih.getSelectedRow(), 0) + ""));
+			int leser = (Integer.parseInt(tmLeser.getValueAt(leserVerleih.getSelectedRow(), 0) + ""));
+			this.controller.addVerleih(Verleih.getAnzahlVerleihen(),aktDatum, rueckDatum, leser, buch);
+			this.refreshVerleihTable(this.controller.getAlleVerleihen());
+			this.controller.aendernBuchStatus(buch);
+			this.refreshBuchTable(this.controller.getAlleBuecher());
 		}
 		else if("newBuch".equals(cmd)){
 			System.out.println("Buch.getAnzahlBuecher()"+ Buch.getAnzahlBuecher());
