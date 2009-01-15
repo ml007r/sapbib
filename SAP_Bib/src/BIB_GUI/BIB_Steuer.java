@@ -33,7 +33,7 @@ public class BIB_Steuer implements Runnable{
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		BIB_Steuer.getInstance().oeffneDaten();
 		
 	}
 
