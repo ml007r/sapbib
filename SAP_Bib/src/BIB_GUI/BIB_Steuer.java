@@ -129,6 +129,16 @@ public class BIB_Steuer implements Runnable{
 		    }
 		 return null;
 	}
+	public Verleih getVerleihByID(int i){
+		Iterator<Verleih> itr = alleVerleihen.iterator();
+		 while (itr.hasNext()) {
+			 Verleih ver = itr.next();
+			 if(ver.getId()== i){
+				 return ver; 
+			 }
+		    }
+		 return null;
+	}
 	
 	public void setLeser(int i,String vorname, String nachname, String strasse,
 			String plz, String ort){
@@ -211,9 +221,62 @@ public class BIB_Steuer implements Runnable{
 			jcd.schliesseVerbindungsPool();
 		}
 	}
+	
+	public void removeVerleih(Verleih ver){
+		System.out.println(ver.getId());
+		
+		alleVerleihen.remove(ver);
+	
+		// eine Instanz der Demo-Klasse erstellen
+		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		//System.out.println(buch.getId()+ "removeBuch : i");
+		
+		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+		// eine Referenz zum Repository des SAP-Systems anfordern
+		 
+		jcd.erstelleVerbindungsPool();
+		
+		try {
+			jcd.loescheVerleih(ver.getId());
+			System.out.println("aendernStautsBuch: " +ver.getDasBuch());
+			jcd.aendernStautsBuch(this.getBuchByID(ver.getDasBuch()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+	
+			System.out.println("Schreiben des Lesers fehlgeschlagen!!!! " + e.getMessage());
+		}
+		finally{
+			jcd.schliesseVerbindungsPool();
+		}
+	}
+	
+	public void removeStatus(Buch buch){
+			
+		// eine Instanz der Demo-Klasse erstellen
+		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		//System.out.println(buch.getId()+ "removeBuch : i");
+		
+		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+		// eine Referenz zum Repository des SAP-Systems anfordern
+		 
+		jcd.erstelleVerbindungsPool();
+		
+		try {
+			jcd.aendernStautsBuch(buch);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+	
+			System.out.println("Schreiben des Lesers fehlgeschlagen!!!! " + e.getMessage());
+		}
+		finally{
+			jcd.schliesseVerbindungsPool();
+		}
+	}
+	
 	public void removeAllBuecher(){
 		this.alleBuecher = null;
 	}
+	
 	
 
 	public void oeffneDaten(){
@@ -361,9 +424,58 @@ public class BIB_Steuer implements Runnable{
 				jcd.schliesseVerbindungsPool();
 			}
 	}
-	public void aendernBuchStatus(int buch){
-		Buch b = this.getBuchByID(buch);
-		b.setLeihe(false);
+	public void aendernBuchStatus(Buch buch){
+		if(buch.getVerleihStatus()){
+			buch.setLeihe(false);
+		}
+		else{
+			buch.setLeihe(true);
+		}
+			
+	
+		// eine Instanz der Demo-Klasse erstellen
+		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		//System.out.println(buch.getId()+ "removeBuch : i");
+		
+		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+		// eine Referenz zum Repository des SAP-Systems anfordern
+		 
+		jcd.erstelleVerbindungsPool();
+		
+		try {
+			jcd.aendernStautsBuch(buch);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+	
+			System.out.println("Schreiben des Lesers fehlgeschlagen!!!! " + e.getMessage());
+		}
+		finally{
+			jcd.schliesseVerbindungsPool();
+		}
+		
+	}
+	
+	public void aendernRueckgabeDatum(Verleih ver){
+		
+		// eine Instanz der Demo-Klasse erstellen
+		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		//System.out.println(buch.getId()+ "removeBuch : i");
+		
+		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
+		// eine Referenz zum Repository des SAP-Systems anfordern
+		 
+		jcd.erstelleVerbindungsPool();
+		
+		try {
+			jcd.aendernRueckgabeDatum(ver);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+	
+			System.out.println("Schreiben des Lesers fehlgeschlagen!!!! " + e.getMessage());
+		}
+		finally{
+			jcd.schliesseVerbindungsPool();
+		}
 		
 	}
 }

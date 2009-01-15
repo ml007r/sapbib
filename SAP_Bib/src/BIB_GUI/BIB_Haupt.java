@@ -3,6 +3,8 @@ package BIB_GUI;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.text.TableView.TableCell;
 
 import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
@@ -22,7 +24,7 @@ import BIB_Modell.Leser;
 
 
 public class BIB_Haupt extends JFrame
-implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Runnable
+implements ActionListener, MouseListener, ListSelectionListener, Runnable, TableCellRenderer
 {
 	// Controller
 	private BIB_Steuer controller = null;
@@ -44,7 +46,12 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Ru
     DefaultTableModel tmLeser;
     String[] columnNamesLeser = {"ID","Name", "Nachname","Strasse&HN","PLZ","Ort"};
     String[][] leser = {{"", "","","","",""}};
-    JTable leserListe = new JTable(leser,columnNamesLeser);
+    JTable leserListe = new JTable(leser,columnNamesLeser){
+        public boolean isCellEditable(int x, int y) {
+            return false;
+        }
+    };
+
     JTextField txtKdName = null;
     JTextField txtKdNachname = null;
     JTextField txtKdStrasse = null;
@@ -60,7 +67,12 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Ru
      */
     String[] columnNamesBuch = {"ID","ISBN", "Titel","Autor","Beschreibung","Verlag"};
     String[][] buch = {{"","","","","",""}};
-    JTable buchListe = new JTable(buch,columnNamesBuch);
+    JTable buchListe = new JTable(buch,columnNamesBuch){
+        public boolean isCellEditable(int x, int y) {
+            return false;
+        }
+    };
+
     DefaultTableModel tmBuch;
     JTextField txtBuchISBN = null;
     JTextField txtBuchTitel = null;
@@ -84,17 +96,32 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Ru
     
     String[] columnNamesLeserVerleih = {"ID","Name", "Nachname","Strasse&HN","PLZ","Ort"};
     String[][] leserVerleihZeile = {{"","","","","",""}};
-    JTable leserVerleih = new JTable(leserVerleihZeile,columnNamesLeserVerleih);
+    JTable leserVerleih = new JTable(leserVerleihZeile,columnNamesLeserVerleih){
+        public boolean isCellEditable(int x, int y) {
+            return false;
+        }
+    };
+
     DefaultTableModel tmLeserVerleih;
     
     String[] columnNamesBuchVerleih = {"ID","ISBN", "Titel","Autor","Beschreibung","Verlag"};
     String[][] buchVerleihZeile = {{"","","","","",""}};
-    JTable buchVerleih = new JTable(buchVerleihZeile,columnNamesBuchVerleih);
+    JTable buchVerleih = new JTable(buchVerleihZeile,columnNamesBuchVerleih){
+        public boolean isCellEditable(int x, int y) {
+            return false;
+        }
+    };
+
     DefaultTableModel tmBuchVerleih;
     
     String[] columnNamesVerleih = {"ID" , "Buch ID", "Leser ID","Ausleihdatum","Rückgabedatum"};
     String[][] verleihZeile = {{"","","","",""}};
-    JTable verleihListe = new JTable(verleihZeile,columnNamesVerleih);
+    JTable verleihListe = new JTable(verleihZeile,columnNamesVerleih){
+        public boolean isCellEditable(int x, int y) {
+            return false;
+        }
+    };
+
     DefaultTableModel tmVerleih;
    
     private static BIB_Haupt instance = null;
@@ -113,10 +140,10 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Ru
         tp.addTab("Leser", initLeser());   
         tp.addTab("Medium", initBuch());
         tp.addTab("Ausleihe", initVerleihe());      
-        tp.addKeyListener(this);
+        //tp.addKeyListener(this);
         this.add(tp);
         txtKdName.setText("");
-        this.addKeyListener(this);
+        //this.addKeyListener(this);
         
 		System.out.println();
                
@@ -211,7 +238,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Ru
         
         //leserListe = new JTable(columnNamesLeser);
         leserListe.addMouseListener( this );
-        leserListe.addKeyListener( this );
+        //leserListe.addKeyListener( this );
         //leserListe.addListSelectionListener( this );
         JScrollPane ortListeScrollPane = new JScrollPane( leserListe );
         ortListeScrollPane.setBounds( 100, 15, 275, 150 );
@@ -304,7 +331,7 @@ implements ActionListener, MouseListener, ListSelectionListener, KeyListener, Ru
 
 	        
 	        buchListe.addMouseListener( this );
-	        buchListe.addKeyListener( this );
+	        //buchListe.addKeyListener( this );
 	        buchListeScrollPane = new JScrollPane( buchListe );
 	        buchListeScrollPane.setBounds( 100, 15, 275, 150 );
 	        buchListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -394,7 +421,7 @@ public Component initVerleihe(){
     hilfsComp.add( lblListLeser );
 
     leserVerleih.addMouseListener( this );
-	leserVerleih.addKeyListener( this );
+	//leserVerleih.addKeyListener( this );
 	JScrollPane leserListeVerleihScrollPane = new JScrollPane( leserVerleih );
     leserListeVerleihScrollPane.setBounds( 100, 15, 275, 150 );
     leserVerleih.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -405,7 +432,7 @@ public Component initVerleihe(){
     hilfsComp.add( lblListBuch );
 
     buchVerleih.addMouseListener( this );
-    buchVerleih.addKeyListener( this );
+    //buchVerleih.addKeyListener( this );
 	JScrollPane buchListeVerleihScrollPane = new JScrollPane( buchVerleih );
 	buchListeVerleihScrollPane.setBounds( 450, 15, 275, 150 );
     buchVerleih.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -416,7 +443,7 @@ public Component initVerleihe(){
     hilfsComp.add( lblListVerleih );
 
     verleihListe.addMouseListener( this );
-    verleihListe.addKeyListener( this );
+    //verleihListe.addKeyListener( this );
 	JScrollPane listeVerleihScrollPane = new JScrollPane(  verleihListe );
 	listeVerleihScrollPane.setBounds( 100 , 250, 500, 150 );
     verleihListe.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
@@ -505,11 +532,11 @@ public void refreshVerleihTable(ArrayList<Verleih> verleih){
 	    int i = 0;
 	    for ( Verleih ver : verleih )
 	    {
-	        System.out.println("Verleih objekt gefunden!");
+	        if(ver.getId()!= 0 ){
 	        String[] hilfsString = {ver.getId()+"",ver.getDasBuch()+"",ver.getDerLeser()+"", ver.getAusleihdatum(), ver.getRueckgabedatum()};
-	    	tmVerleih.insertRow(i, hilfsString);
+	        tmVerleih.insertRow(i, hilfsString);
 	    	i++;
-	        
+	        }
 	    }
 	    verleihListe.setModel( tmVerleih );
     }	
@@ -517,6 +544,18 @@ public void refreshVerleihTable(ArrayList<Verleih> verleih){
 public BIB_Steuer getController() {
 	return controller;
 }
+@Override
+public Component getTableCellRendererComponent(JTable table, Object value,
+		boolean isSelected, boolean hasFocus, int row, int column) {
+	 // die normalen Farben
+
+	setForeground( Color.BLACK );
+   
+    
+  
+    return this;
+ } 
+
 
 public void setController(BIB_Steuer controller) {
 	this.controller = controller;
@@ -577,12 +616,14 @@ public void setController(BIB_Steuer controller) {
 				rueckDatum = aktTag + ".0" + rueckMonat + "." + aktJahr;
 			}
 			
-			int buch = (Integer.parseInt(tmBuchVerleih.getValueAt(buchVerleih.getSelectedRow(), 0) + ""));
+			int b = (Integer.parseInt(tmBuchVerleih.getValueAt(buchVerleih.getSelectedRow(), 0) + ""));
+			Buch hilfsBuch = this.controller.getBuchByID(b);
 			int leser = (Integer.parseInt(tmLeser.getValueAt(leserVerleih.getSelectedRow(), 0) + ""));
-			this.controller.addVerleih(Verleih.getAnzahlVerleihen(),aktDatum, rueckDatum, leser, buch);
+			this.controller.addVerleih(Verleih.getAnzahlVerleihen(),aktDatum, rueckDatum, leser, hilfsBuch.getId());
 			this.refreshVerleihTable(this.controller.getAlleVerleihen());
-			this.controller.aendernBuchStatus(buch);
+			this.controller.aendernBuchStatus(hilfsBuch);
 			this.refreshBuchTable(this.controller.getAlleBuecher());
+			btnVerleihDel.setVisible(true);
 		}
 		else if("newBuch".equals(cmd)){
 			System.out.println("Buch.getAnzahlBuecher()"+ Buch.getAnzahlBuecher());
@@ -609,10 +650,38 @@ public void setController(BIB_Steuer controller) {
 			btnLeserAbort.setVisible(false);			
 		}
 		else if("returnVerleih".equals(cmd)){
-				
+			Calendar myCal2 = new GregorianCalendar();
+			String rueckDatum;
+			int aktTag = myCal2.get(Calendar.DAY_OF_MONTH);
+			int aktMonat = myCal2.get(Calendar.MONTH)+1;
+			int aktJahr = myCal2.get(Calendar.YEAR);
+			rueckDatum = aktTag + ".0" + aktMonat + "." + aktJahr;
+			int i = Integer.parseInt(tmVerleih.getValueAt(verleihListe.getSelectedRow(), 0) + "");
+			Verleih ver = controller.getVerleihByID(i);
+			ver.setRueckgabedatum(rueckDatum);
+			this.controller.aendernRueckgabeDatum(ver);
+		
+			Buch hilfsBuch = this.controller.getBuchByID(ver.getDasBuch());
+			System.out.println("status von buch + " + buch + " geändert...");
+			this.controller.aendernBuchStatus(hilfsBuch);
+			
+			this.refreshBuchTable(this.controller.getAlleBuecher());
+			this.refreshVerleihTable(this.controller.getAlleVerleihen());
 		}
 		else if("delVerleih".equals(cmd)){
-			
+			if(!this.controller.getAlleVerleihen().isEmpty()){
+			int i = Integer.parseInt(tmVerleih.getValueAt(verleihListe.getSelectedRow(), 0) + "");
+			Verleih ver = controller.getVerleihByID(i);
+			int buch = ver.getDasBuch();
+			System.out.println("status von buch + " + buch + " geändert...");
+			this.controller.removeVerleih(ver);
+			this.controller.getBuchByID(buch).setLeihe(true);
+			this.refreshBuchTable(this.controller.getAlleBuecher());
+			this.refreshVerleihTable(this.controller.getAlleVerleihen());
+			}
+			if(this.controller.getAlleVerleihen().isEmpty()){
+				btnVerleihDel.setVisible(false);
+			}
 		}
 		else if ("abbrechenBuch".equals(cmd)){
 			txtBuchISBN.setText("");
@@ -693,57 +762,38 @@ public void setController(BIB_Steuer controller) {
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		//System.out.println("***mouseClicked*** " + arg0.toString());
+		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		//System.out.println("***mouseEntered*** " + arg0.toString());
+		
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
+	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		//System.out.println("***mouseExited*** " + arg0.toString());
+		
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		//System.out.println("***mousePressed*** " + arg0.toString());
+		
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		//System.out.println("***mouseReleased*** " + arg0.toString());
+		
 	}
 
 	@Override
-	public void valueChanged(ListSelectionEvent arg0) {
+	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
-		//System.out.println("***valueChanged*** " + arg0.toString());
+		
 	}
-
-	@Override
-	public void keyPressed(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		//System.out.println("***keyPressed*** " + arg0.toString());
-	}
-
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		//System.out.println("***keyReleased*** " + arg0.toString());
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		//System.out.println("***keyTyped*** " + arg0.toString());
-	}
-	
 }
