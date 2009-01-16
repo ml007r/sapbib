@@ -149,7 +149,7 @@ implements ActionListener, MouseListener, ListSelectionListener, Runnable, Table
                
         JMenuBar menuBar = new JMenuBar();
 
-        /*JMenu menuDatei = new JMenu( "Datei" );
+        JMenu menuDatei = new JMenu( "Datei" );
         JMenuItem menuItemOeffnen = new JMenuItem( "Oeffnen" );
         menuItemOeffnen.addActionListener( this );
         menuDatei.add( menuItemOeffnen );
@@ -160,9 +160,21 @@ implements ActionListener, MouseListener, ListSelectionListener, Runnable, Table
         menuItemBeenden.addActionListener( this );
         menuDatei.add( menuItemBeenden );
 
-        menuBar.add( menuDatei );
+        JMenu menuAbout = new JMenu( "Look & Feel" );
+        JMenuItem menuItemJava = new JMenuItem( "L&F Java" );
+        menuItemJava.addActionListener( this );
+        menuAbout.add( menuItemJava );
+        JMenuItem menuItemWindows = new JMenuItem( "L&F Windows" );
+        menuItemWindows.addActionListener( this );
+        menuAbout.add( menuItemWindows );
+        JMenuItem menuItemMotif = new JMenuItem( "L&F Motif" );
+        menuItemMotif.addActionListener( this );
+        menuAbout.add( menuItemMotif );
 
-        this.setJMenuBar( menuBar );*/
+        menuBar.add( menuDatei );
+        menuBar.add(menuAbout);
+
+        this.setJMenuBar( menuBar );
 
         this.pack();
         this.setSize( 800, 600 );
@@ -625,6 +637,79 @@ public void setController(BIB_Steuer controller) {
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 			btnVerleihDel.setVisible(true);
 		}
+		 else if ( "L&F Java".equals( cmd ) )
+	        {
+	            try
+	            {
+	                UIManager.setLookAndFeel( "javax.swing.plaf.metal.MetalLookAndFeel" );
+	            }
+	            catch ( ClassNotFoundException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( InstantiationException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( IllegalAccessException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( UnsupportedLookAndFeelException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            SwingUtilities.updateComponentTreeUI( this );
+	        }
+	        else if ( "L&F Windows".equals( cmd ) )
+	        {
+	            try
+	            {
+	                UIManager.setLookAndFeel( "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" );
+	            }
+	            catch ( ClassNotFoundException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( InstantiationException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( IllegalAccessException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( UnsupportedLookAndFeelException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            SwingUtilities.updateComponentTreeUI( this );
+	        }
+	        else if ( "L&F Motif".equals( cmd ) )
+	        {
+	            try
+	            {
+	                UIManager.setLookAndFeel( "com.sun.java.swing.plaf.motif.MotifLookAndFeel" );
+	            }
+	            catch ( ClassNotFoundException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( InstantiationException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( IllegalAccessException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            catch ( UnsupportedLookAndFeelException e1 )
+	            {
+	                e1.printStackTrace();
+	            }
+	            SwingUtilities.updateComponentTreeUI( this );
+	        }
+
 		else if("newBuch".equals(cmd)){
 			System.out.println("Buch.getAnzahlBuecher()"+ Buch.getAnzahlBuecher());
 			this.controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(),txtBuchAutor.getText(),
