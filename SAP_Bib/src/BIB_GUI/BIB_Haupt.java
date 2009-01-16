@@ -631,7 +631,7 @@ public void setController(BIB_Steuer controller) {
 			}
 			catch(Exception e1){
         		System.err.println(e1.getMessage());
-        		new InfoFenster("Alle Bücher ausgeliehen du Vollidiot...");
+        		new InfoFenster("Alle Bücher ausgeliehen oder keines selektiert du Vollidiot...");
         	}
 
 		}
