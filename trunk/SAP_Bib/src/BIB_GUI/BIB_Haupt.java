@@ -140,13 +140,10 @@ implements ActionListener, MouseListener, ListSelectionListener, Runnable, Table
         tp.addTab("Leser", initLeser());   
         tp.addTab("Medium", initBuch());
         tp.addTab("Ausleihe", initVerleihe());      
-        //tp.addKeyListener(this);
         this.add(tp);
         txtKdName.setText("");
-        //this.addKeyListener(this);
+       
         
-		System.out.println();
-               
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuDatei = new JMenu( "Datei" );
@@ -179,12 +176,6 @@ implements ActionListener, MouseListener, ListSelectionListener, Runnable, Table
         this.pack();
         this.setSize( 800, 600 );
         this.setVisible(true);
-        //this.controller.oeffneDaten();
-		/*if(this.controller.getAlleBuecher().size() != 0){
-			this.refreshBuchTable(this.controller.getAlleBuecher());
-		}
-		this.refreshLeserTable(this.controller.getAlleLeser());
-		this.refreshVerleihTable(this.controller.getAlleVerleihen());*/
     }
     public static BIB_Haupt getInstance() {
        if(instance == null) {
@@ -597,45 +588,52 @@ public void setController(BIB_Steuer controller) {
 			btnBuchEditStore.setVisible(false);			
 		}
 		else if("newVerleih".equals(cmd)){
-			Calendar myCal2 = new GregorianCalendar();
-			String aktDatum;
-			String rueckDatum;
-			int aktTag = myCal2.get(Calendar.DAY_OF_MONTH);
-			int aktMonat = myCal2.get(Calendar.MONTH)+1;
-			int aktJahr = myCal2.get(Calendar.YEAR);
-			System.out.println(aktJahr);
-			if (aktMonat<= 9){
-				aktDatum = aktTag + ".0" + aktMonat + "." + aktJahr;
+			try{
+				Calendar myCal2 = new GregorianCalendar();
+				String aktDatum;
+				String rueckDatum;
+				int aktTag = myCal2.get(Calendar.DAY_OF_MONTH);
+				int aktMonat = myCal2.get(Calendar.MONTH)+1;
+				int aktJahr = myCal2.get(Calendar.YEAR);
+				System.out.println(aktJahr);
+				if (aktMonat<= 9){
+					aktDatum = aktTag + ".0" + aktMonat + "." + aktJahr;
+				}
+				else{
+					aktDatum = aktTag + "." + aktMonat + "." + aktJahr;
+				}
+				
+				if (aktMonat == 12){
+					aktMonat = 0;
+					aktJahr += 1;
+				}
+				if (aktMonat == 12){
+					aktMonat = 0;
+					aktJahr += 1;
+				}
+				int rueckMonat = aktMonat + 1;
+				
+				if (aktMonat<= 9){
+					rueckDatum = aktTag + ".0" + rueckMonat + "." + aktJahr;
+				}
+				else{
+					rueckDatum = aktTag + ".0" + rueckMonat + "." + aktJahr;
+				}
+				
+				int b = (Integer.parseInt(tmBuchVerleih.getValueAt(buchVerleih.getSelectedRow(), 0) + ""));
+				Buch hilfsBuch = this.controller.getBuchByID(b);
+				int leser = (Integer.parseInt(tmLeser.getValueAt(leserVerleih.getSelectedRow(), 0) + ""));
+				this.controller.addVerleih(Verleih.getAnzahlVerleihen(),aktDatum, rueckDatum, leser, hilfsBuch.getId());
+				this.refreshVerleihTable(this.controller.getAlleVerleihen());
+				this.controller.aendernBuchStatus(hilfsBuch);
+				this.refreshBuchTable(this.controller.getAlleBuecher());
+				btnVerleihDel.setVisible(true);
 			}
-			else{
-				aktDatum = aktTag + "." + aktMonat + "." + aktJahr;
-			}
-			
-			if (aktMonat == 12){
-				aktMonat = 0;
-				aktJahr += 1;
-			}
-			if (aktMonat == 12){
-				aktMonat = 0;
-				aktJahr += 1;
-			}
-			int rueckMonat = aktMonat + 1;
-			
-			if (aktMonat<= 9){
-				rueckDatum = aktTag + ".0" + rueckMonat + "." + aktJahr;
-			}
-			else{
-				rueckDatum = aktTag + ".0" + rueckMonat + "." + aktJahr;
-			}
-			
-			int b = (Integer.parseInt(tmBuchVerleih.getValueAt(buchVerleih.getSelectedRow(), 0) + ""));
-			Buch hilfsBuch = this.controller.getBuchByID(b);
-			int leser = (Integer.parseInt(tmLeser.getValueAt(leserVerleih.getSelectedRow(), 0) + ""));
-			this.controller.addVerleih(Verleih.getAnzahlVerleihen(),aktDatum, rueckDatum, leser, hilfsBuch.getId());
-			this.refreshVerleihTable(this.controller.getAlleVerleihen());
-			this.controller.aendernBuchStatus(hilfsBuch);
-			this.refreshBuchTable(this.controller.getAlleBuecher());
-			btnVerleihDel.setVisible(true);
+			catch(Exception e1){
+        		System.err.println(e1.getMessage());
+        		new InfoFenster(e1.getMessage());
+        	}
+
 		}
 		 else if ( "L&F Java".equals( cmd ) )
 	        {
