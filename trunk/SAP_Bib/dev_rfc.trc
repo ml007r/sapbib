@@ -166,3 +166,25 @@ LINE        233
 DETAIL      NiHsLGetNodeAddr: hostname cached as unknown
 COUNTER     2
 
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:3748 Error in program 'javaw': ======> Connect to SAP gateway failed
+Connect_PM  GWHOST=hcc3v00.informatik.tu-muenchen.de, GWSERV=sapgw00, SYSNR=00
+
+LOCATION    CPIC (TCP/IP) on local host
+ERROR       connection to partner 'hcc3v00.informatik.tu-muenchen.de:3300'
+            broken
+
+TIME        Fri Jan 16 11:33:48 2009
+RELEASE     710
+COMPONENT   NI (network interface)
+VERSION     39
+RC          -6
+MODULE      nixxi.cpp
+LINE        4554
+DETAIL      NiIRead
+SYSTEM CALL recv
+ERRNO       10054
+ERRNO TEXT  WSAECONNRESET: Connection reset by peer
+COUNTER     3
+
