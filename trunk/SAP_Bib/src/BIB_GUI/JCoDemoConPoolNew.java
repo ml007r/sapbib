@@ -712,7 +712,12 @@ public class JCoDemoConPoolNew {
 		 */
 		JCO.ParameterList input = function.getImportParameterList();
 		input.setValue(buch.getId(), "ID");
-		input.setValue("", "VERLEIH");
+		if(buch.getVerleihStatus()){
+			input.setValue("", "VERLEIH");
+		}
+		else{
+			input.setValue("X", "VERLEIH");
+		}
 
 				/*
 		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
