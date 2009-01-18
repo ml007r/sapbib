@@ -378,7 +378,7 @@ public class JCoDemoConPoolNew {
 			
 			Table x = function.getTableParameterList().getTable("VERLEIH");
 			System.out.println(x);
-			Verleih.setAnzahlVerleihen(export.getField("LETZTER").getInt()+1);
+			Verleih.setAnzahlVerleihen(export.getField("LETZTER").getInt());
 			x.firstRow();
 			verleih.add(new Verleih(x.getField("ID").getInt(), x.getField("AUSLEIH_DATUM").getString(), x.getField("RUECKGABE_DATUM").getString(),
 					x.getField("LESER_ID").getInt(),x.getField("BUCH_ID").getInt()));

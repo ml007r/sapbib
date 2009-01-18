@@ -507,10 +507,12 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 	    int i = 0;
 	    for ( Buch bu : buch )
 	    {
-	        System.out.println("Buch objekt gefunden!");
-	        String[] hilfsString = {bu.getId()+"", bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
-	    	tmBuch.insertRow(i, hilfsString);
-	    	i++;
+	        if(bu.getId() != 0){
+		    	System.out.println("Buch objekt gefunden!");
+		        String[] hilfsString = {bu.getId()+"", bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
+		    	tmBuch.insertRow(i, hilfsString);
+		    	i++;
+	        }
 	        
 	    }
 	    buchListe.setModel( tmBuch );
@@ -518,7 +520,7 @@ public void refreshBuchTable(ArrayList<Buch> buch){
 	    int j = 0;
 	    for ( Buch bu : buch )
 	    {
-	        if(bu.getVerleihStatus()){
+	        if(bu.getVerleihStatus() & bu.getId() != 0){
 		    	System.out.println("Buch objekt gefunden mit verleihStatus true!");
 		        String[] hilfsString = {bu.getId()+"", bu.getIsbn(), bu.getTitel(),bu.getAutor(), bu.getBeschreibung(), bu.getVerlag()};
 		        tmBuchVerleih.insertRow(j, hilfsString);
@@ -812,12 +814,11 @@ public void setController(BIB_Steuer controller) {
 			try {
 				int i = Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "");
 				this.controller.removeLeser(controller.getLeserByID(i));
-				this.refreshLeserTable(this.controller.getAlleLeser());
 			} catch(Exception e1){
 	        	System.err.println(e1.getMessage());
 	        	new InfoFenster("Leser nicht vorhanden du Vollidiot...");
 	        }
-				
+			this.refreshLeserTable(this.controller.getAlleLeser());				
 		}
 		else if("editBuch".equals(cmd)){
 			try {
