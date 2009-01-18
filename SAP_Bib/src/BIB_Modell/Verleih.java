@@ -1,6 +1,5 @@
 package BIB_Modell;
 
-import java.util.Date;
 
 public class Verleih {
 

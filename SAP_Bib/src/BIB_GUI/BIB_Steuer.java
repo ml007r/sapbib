@@ -3,12 +3,11 @@ package BIB_GUI;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.sap.mw.jco.JCO;
 
-import com.sap.mw.jco.*;
-
-import BIB_Modell.Verleih;
 import BIB_Modell.Buch;
 import BIB_Modell.Leser;
+import BIB_Modell.Verleih;
 import BIB_SAP_CONNECT.JCoDemoConPoolNew;
 
 
