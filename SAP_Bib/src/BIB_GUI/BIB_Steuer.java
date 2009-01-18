@@ -455,7 +455,7 @@ public class BIB_Steuer implements Runnable{
 		
 	}
 	
-	public void aendernRueckgabeDatum(Verleih ver){
+	public void aendernRueckgabe(Verleih ver){
 		
 		// eine Instanz der Demo-Klasse erstellen
 		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
@@ -467,7 +467,7 @@ public class BIB_Steuer implements Runnable{
 		jcd.erstelleVerbindungsPool();
 		
 		try {
-			jcd.aendernRueckgabeDatum(ver);
+			jcd.aendernRueckgabe(ver);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 	

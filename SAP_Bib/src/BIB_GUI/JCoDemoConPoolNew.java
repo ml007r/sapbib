@@ -741,7 +741,7 @@ public class JCoDemoConPoolNew {
 		
 	}
 
-public void aendernRueckgabeDatum(Verleih ver) throws Exception {
+public void aendernRueckgabe(Verleih ver) throws Exception {
 
 		
 		JCO.Client client = null;

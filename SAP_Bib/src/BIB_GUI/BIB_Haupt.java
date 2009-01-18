@@ -748,7 +748,7 @@ public void setController(BIB_Steuer controller) {
 				int i = Integer.parseInt(tmVerleih.getValueAt(verleihListe.getSelectedRow(), 0) + "");
 				Verleih ver = controller.getVerleihByID(i);
 				ver.setRueckgabedatum(rueckDatum);
-				this.controller.aendernRueckgabeDatum(ver);
+				this.controller.aendernRueckgabe(ver);
 			
 				Buch hilfsBuch = this.controller.getBuchByID(ver.getDasBuch());
 				System.out.println("status von buch + " + buch + " geändert...");
@@ -803,10 +803,11 @@ public void setController(BIB_Steuer controller) {
 			try {
 				int i = Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "");
 				this.controller.removeBuch(controller.getBuchByID(i));
-				this.refreshBuchTable(this.controller.getAlleBuecher());
 			} catch(Exception e1){
 	        	System.err.println(e1.getMessage());
 	        	new InfoFenster("Buch nicht vorhanden du Vollidiot...");
+	        } finally{
+	        	this.refreshBuchTable(this.controller.getAlleBuecher());
 	        }
 				
 		}
@@ -862,15 +863,6 @@ public void setController(BIB_Steuer controller) {
 					txtKdStrasse.setText("");
 			
 			this.refreshLeserTable(this.controller.getAlleLeser());
-		}
-		else if("Oeffnen".equals(cmd)){
-			System.out.println("Hier oeffnen");
-			/*this.controller.oeffneDaten();
-			if(this.controller.getAlleBuecher().size() != 0){
-				this.refreshBuchTable(this.controller.getAlleBuecher());
-			}
-			this.refreshLeserTable(this.controller.getAlleLeser());
-			this.refreshVerleihTable(this.controller.getAlleVerleihen());*/
 		}
 		else if("newBuch".equals(cmd)){					
 				controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(), txtBuchAutor.getText(), 
