@@ -1,4 +1,4 @@
-package BIB_GUI;
+package BIB_SAP_CONNECT;
 /**
  * JCoDemoConPool.java
  */
@@ -61,7 +61,7 @@ public class JCoDemoConPoolNew {
 	 * @param conPoolId
 	 *            eine eindeutige Kennzeichnung für den Connection-Pool
 	 */
-	public JCoDemoConPoolNew(String conPoolId) {
+	protected JCoDemoConPoolNew(String conPoolId) {
 		this.conPoolId = conPoolId;
 	}
 
@@ -72,7 +72,7 @@ public class JCoDemoConPoolNew {
 	 * 
 	 * @throws JCO.Exception
 	 */
-	protected void erstelleVerbindungsPool() throws JCO.Exception {
+	public void erstelleVerbindungsPool() throws JCO.Exception {
 
 		// Erstellen des Connection-Pools
 		JCO.addClientPool(this.conPoolId, // Kennzeichner für den Pool
@@ -112,7 +112,7 @@ public class JCoDemoConPoolNew {
 	 * Es werden die durch den Connection-Pool belegten Ressourcen freigeben und
 	 * der Pool "this.conPoolId" mit allen Verbindungen geschlossen.
 	 */
-	protected void schliesseVerbindungsPool() {
+	public void schliesseVerbindungsPool() {
 
 		JCO.removeClientPool(this.conPoolId);
 	}
