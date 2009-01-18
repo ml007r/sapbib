@@ -708,8 +708,8 @@ public void setController(BIB_Steuer controller) {
 
 		else if("newBuch".equals(cmd)){
 			System.out.println("Buch.getAnzahlBuecher()"+ Buch.getAnzahlBuecher());
-			this.controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(),txtBuchAutor.getText(),
-					txtBuchBeschreibung.getText(), txtBuchTitel.getText(),txtBuchVerlag.getText());
+			this.controller.addBuch(Buch.getAnzahlBuecher(),txtBuchISBN.getText(),txtBuchTitel.getText(),txtBuchAutor.getText(),
+					txtBuchBeschreibung.getText(), txtBuchVerlag.getText());
 			txtBuchISBN.setText("");
 			txtBuchAutor.setText("");
 			txtBuchBeschreibung.setText("");
