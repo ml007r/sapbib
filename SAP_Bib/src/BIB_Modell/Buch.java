@@ -1,9 +1,5 @@
 package BIB_Modell;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class Buch {
 	
 	private static int anzahlBuecher = 0;

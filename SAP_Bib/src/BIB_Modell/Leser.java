@@ -1,9 +1,5 @@
 package BIB_Modell;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 public class Leser {
 
 	private static int anzahlLeser;
