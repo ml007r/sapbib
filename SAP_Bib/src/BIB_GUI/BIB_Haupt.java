@@ -742,8 +742,20 @@ public void setController(BIB_Steuer controller) {
 				Calendar myCal2 = new GregorianCalendar();
 				String rueckDatum;
 				int aktTag = myCal2.get(Calendar.DAY_OF_MONTH);
-				int aktMonat = myCal2.get(Calendar.MONTH)+1;
+				int aktMonat = myCal2.get(Calendar.MONTH);
 				int aktJahr = myCal2.get(Calendar.YEAR);
+				if(aktMonat==11){
+					aktMonat = 1;
+					rueckDatum = aktTag + ".0" + aktMonat + "." + aktJahr;
+				}
+				else if(aktMonat>8 & aktMonat < 11){
+					aktMonat++;
+					rueckDatum = aktTag + "." + aktMonat + "." + aktJahr;
+				}
+				else {
+					aktMonat++;
+					rueckDatum = aktTag + ".0" + aktMonat + "." + aktJahr;
+				}
 				rueckDatum = aktTag + ".0" + aktMonat + "." + aktJahr;
 				int i = Integer.parseInt(tmVerleih.getValueAt(verleihListe.getSelectedRow(), 0) + "");
 				Verleih ver = controller.getVerleihByID(i);
