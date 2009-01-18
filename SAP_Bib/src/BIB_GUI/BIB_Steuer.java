@@ -9,6 +9,7 @@ import com.sap.mw.jco.*;
 import BIB_Modell.Verleih;
 import BIB_Modell.Buch;
 import BIB_Modell.Leser;
+import BIB_SAP_CONNECT.JCoDemoConPoolNew;
 
 
 public class BIB_Steuer implements Runnable{
@@ -62,7 +63,7 @@ public class BIB_Steuer implements Runnable{
 		this.alleLeser.add(hilfsLeser);
 		
 			// eine Instanz der Demo-Klasse erstellen
-			JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+			JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 			
 			
 			// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -85,11 +86,9 @@ public class BIB_Steuer implements Runnable{
 	
 	
 	public synchronized void removeLeser(Leser les){
-		System.out.println(alleLeser);
-		alleLeser.remove(les);
-	
+			
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 		System.out.println(les.getId()+ "removeLeser : i");
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -99,10 +98,11 @@ public class BIB_Steuer implements Runnable{
 		
 		try {
 			jcd.loescheLeser(les.getId());
+			alleLeser.remove(les);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-	
-			System.out.println("Schreiben des Lesers fehlgeschlagen!!!! " + e.getMessage());
+			new InfoFenster("Leser noch aktiv!!!");
+			
 		}
 		finally{
 			jcd.schliesseVerbindungsPool();
@@ -140,7 +140,7 @@ public class BIB_Steuer implements Runnable{
 			String plz, String ort){
 		Leser les = this.getLeserByID(i);
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 		System.out.println(i+ "setLeser : i");
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -175,7 +175,7 @@ public class BIB_Steuer implements Runnable{
 		this.alleBuecher.add(hilfsBuch);
 		
 			// eine Instanz der Demo-Klasse erstellen
-			JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+			JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 			
 			
 			// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -194,11 +194,9 @@ public class BIB_Steuer implements Runnable{
 				jcd.schliesseVerbindungsPool();
 			}
 	}
-	public void removeBuch(Buch buch){
-		alleBuecher.remove(buch);
-	
+	public void removeBuch(Buch buch){	
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 		System.out.println(buch.getId()+ "removeBuch : i");
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -207,11 +205,13 @@ public class BIB_Steuer implements Runnable{
 		jcd.erstelleVerbindungsPool();
 		
 		try {
+			
 			jcd.loescheBuch(buch.getId());
+			alleBuecher.remove(buch);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 	
-			System.out.println("Schreiben des Lesers fehlgeschlagen!!!! " + e.getMessage());
+			new InfoFenster("Buch noch verliehen!!!");
 		}
 		finally{
 			jcd.schliesseVerbindungsPool();
@@ -224,7 +224,7 @@ public class BIB_Steuer implements Runnable{
 		alleVerleihen.remove(ver);
 	
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 		//System.out.println(buch.getId()+ "removeBuch : i");
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -249,7 +249,7 @@ public class BIB_Steuer implements Runnable{
 	public void removeStatus(Buch buch){
 			
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 		//System.out.println(buch.getId()+ "removeBuch : i");
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -277,7 +277,7 @@ public class BIB_Steuer implements Runnable{
 
 	public void oeffneDaten(){
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 
 		/*
 		 * eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -333,7 +333,7 @@ public class BIB_Steuer implements Runnable{
 		//System.out.println("HilfsLeser.getID() " + hilfsLeser.getId());
 		
 			// eine Instanz der Demo-Klasse erstellen
-			JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+			JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 			
 			
 			// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -368,7 +368,7 @@ public class BIB_Steuer implements Runnable{
 			String beschreibung, String verlag) {
 		Buch buch = this.getBuchByID(id);
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
 		// eine Referenz zum Repository des SAP-Systems anfordern
@@ -401,7 +401,7 @@ public class BIB_Steuer implements Runnable{
 		this.alleVerleihen.add(hilfsVerleih);
 		
 			// eine Instanz der Demo-Klasse erstellen
-			JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+			JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 			
 			
 			// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -430,7 +430,7 @@ public class BIB_Steuer implements Runnable{
 			
 	
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 		//System.out.println(buch.getId()+ "removeBuch : i");
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -454,7 +454,7 @@ public class BIB_Steuer implements Runnable{
 	public void aendernRueckgabe(Verleih ver){
 		
 		// eine Instanz der Demo-Klasse erstellen
-		JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
+		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();
 		//System.out.println(buch.getId()+ "removeBuch : i");
 		
 		// eine Verbindung zum SAP-System per Connection-Pool einrichten und
@@ -464,6 +464,7 @@ public class BIB_Steuer implements Runnable{
 		
 		try {
 			jcd.aendernRueckgabe(ver);
+			this.alleVerleihen.remove(ver);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 	

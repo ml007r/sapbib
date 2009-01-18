@@ -573,6 +573,7 @@ public void setController(BIB_Steuer controller) {
 		String cmd = e.getActionCommand();
 		System.out.println("***actionPerformed*** " + e.toString());
 		System.out.println(e.getActionCommand());
+		
 		if("speichernBuch".equals(cmd)){
 			this.controller.setBuch((Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "")),txtBuchISBN.getText(),txtBuchTitel.getText(),txtBuchAutor.getText(),
 					txtBuchBeschreibung.getText(), txtBuchVerlag.getText());
@@ -758,8 +759,7 @@ public void setController(BIB_Steuer controller) {
 			
 				Buch hilfsBuch = this.controller.getBuchByID(ver.getDasBuch());
 				System.out.println("status von buch + " + buch + " geändert...");
-				this.controller.aendernBuchStatus(hilfsBuch);
-				this.controller.getAlleVerleihen().remove(ver);				
+				this.controller.aendernBuchStatus(hilfsBuch);				
 
 			}
 			catch(Exception e1){
@@ -827,8 +827,9 @@ public void setController(BIB_Steuer controller) {
 			} catch(Exception e1){
 	        	System.err.println(e1.getMessage());
 	        	new InfoFenster("Leser nicht vorhanden du Vollidiot...");
+	        } finally{
+			this.refreshLeserTable(this.controller.getAlleLeser());	
 	        }
-			this.refreshLeserTable(this.controller.getAlleLeser());				
 		}
 		else if("editBuch".equals(cmd)){
 			try {
