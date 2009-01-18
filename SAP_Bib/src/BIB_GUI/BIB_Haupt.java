@@ -766,13 +766,16 @@ public void setController(BIB_Steuer controller) {
 				System.out.println("status von buch + " + buch + " geändert...");
 				this.controller.aendernBuchStatus(hilfsBuch);
 				this.controller.getAlleVerleihen().remove(ver);				
-				this.refreshBuchTable(this.controller.getAlleBuecher());
-				this.refreshVerleihTable(this.controller.getAlleVerleihen());
+
 			}
 			catch(Exception e1){
 	        	System.err.println(e1.getMessage());
 	        	new InfoFenster("Nix vorhanden du Vollidiot...");
 	        }
+			finally {
+				this.refreshBuchTable(this.controller.getAlleBuecher());
+				this.refreshVerleihTable(this.controller.getAlleVerleihen());
+			}
 		}
 		else if("delVerleih".equals(cmd)){
 			try {
