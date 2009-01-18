@@ -1,11 +1,8 @@
 package BIB_GUI;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+
 
 import com.sap.mw.jco.*;
 
@@ -19,7 +16,6 @@ public class BIB_Steuer implements Runnable{
 	private  ArrayList<Leser> alleLeser = new ArrayList<Leser>();
 	private  ArrayList<Buch> alleBuecher = new ArrayList<Buch>();
 	private  ArrayList<Verleih> alleVerleihen = new ArrayList<Verleih>();
-	private JCoDemoConPoolNew jcd = new JCoDemoConPoolNew();
 	Leser hilfsLeser;
 	
 	private static BIB_Steuer instance = null;

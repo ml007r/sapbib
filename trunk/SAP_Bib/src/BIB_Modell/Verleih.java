@@ -21,7 +21,6 @@ public class Verleih {
 		this.rueckgabedatum = rueckgabedatum;
 		this.derLeser = derLeser;
 		this.dasBuch = dasBuch;
-//		this.frist = frist;
 		anzahlVerleihen++;
 		this.aktiv = true;
 	}
@@ -33,7 +32,6 @@ public class Verleih {
 		this.rueckgabedatum = rueckgabedatum;
 		this.derLeser = derLeser;
 		this.dasBuch = dasBuch;
-//		this.frist = frist;
 		anzahlVerleihen++;
 		this.aktiv = aktiv;
 	}
@@ -51,6 +49,12 @@ public class Verleih {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public boolean isAktiv() {
+		return aktiv;
+	}
+	public void setAktiv(boolean aktiv) {
+		this.aktiv = aktiv;
 	}
 	public String getAusleihdatum() {
 		return ausleihdatum;
@@ -75,14 +79,5 @@ public class Verleih {
 	}
 	public void setDasBuch(int dasBuch) {
 		this.dasBuch = dasBuch;
-	}
-	
-	/*public Date getFrist() {
-		return frist;
-	}
-	public void setFrist(Date frist) {
-		this.frist = frist;
-	}*/
-	
-	
+	}	
 }

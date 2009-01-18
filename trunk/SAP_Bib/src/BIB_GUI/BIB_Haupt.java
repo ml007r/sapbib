@@ -4,18 +4,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.text.TableView.TableCell;
-
-import com.sun.org.apache.bcel.internal.generic.LSTORE;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import BIB_Modell.Verleih;
@@ -47,7 +39,13 @@ implements ActionListener, MouseListener, ListSelectionListener, Runnable, Table
     String[] columnNamesLeser = {"ID","Name", "Nachname","Strasse&HN","PLZ","Ort"};
     String[][] leser = {{"", "","","","",""}};
     JTable leserListe = new JTable(leser,columnNamesLeser){
-        public boolean isCellEditable(int x, int y) {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2980796352881740628L;
+
+		public boolean isCellEditable(int x, int y) {
             return false;
         }
     };
@@ -68,7 +66,7 @@ implements ActionListener, MouseListener, ListSelectionListener, Runnable, Table
     String[] columnNamesBuch = {"ID","ISBN", "Titel","Autor","Beschreibung","Verlag"};
     String[][] buch = {{"","","","","",""}};
     JTable buchListe = new JTable(buch,columnNamesBuch){
-        public boolean isCellEditable(int x, int y) {
+		public boolean isCellEditable(int x, int y) {
             return false;
         }
     };
@@ -575,10 +573,6 @@ public void setController(BIB_Steuer controller) {
 		String cmd = e.getActionCommand();
 		System.out.println("***actionPerformed*** " + e.toString());
 		System.out.println(e.getActionCommand());
-		
-		
-		int selectedRow = 0;
-		
 		if("speichernBuch".equals(cmd)){
 			this.controller.setBuch((Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "")),txtBuchISBN.getText(),txtBuchTitel.getText(),txtBuchAutor.getText(),
 					txtBuchBeschreibung.getText(), txtBuchVerlag.getText());

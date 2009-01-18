@@ -4,12 +4,8 @@ package BIB_GUI;
  */
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import com.sap.mw.jco.*;
-import com.sap.mw.jco.JCO.Record;
 import com.sap.mw.jco.JCO.Table;
-
 import BIB_Modell.Verleih;
 import BIB_Modell.Buch;
 import BIB_Modell.Leser;
@@ -146,11 +142,6 @@ public class JCoDemoConPoolNew {
 		 */
 		JCO.Function function = ftemplate.getFunction();
 
-		/*
-		 * Die Funktionsparameter (IMPORT) der festlegen
-		 */
-		JCO.ParameterList input = function.getImportParameterList();
-
 				/*
 		 * Eine Serververbindung aus dem Connection-Pool als JCO.Client abrufen
 		 */
@@ -216,11 +207,6 @@ public class JCoDemoConPoolNew {
 		 * Eine entsprechende "JCo-Funktion" aufgrund des Templates erzeugen
 		 */
 		JCO.Function function = ftemplate.getFunction();
-
-		/*
-		 * Die Funktionsparameter (IMPORT) der festlegen
-		 */
-		JCO.ParameterList input = function.getImportParameterList();
 		JCO.ParameterList export = function.getExportParameterList();
 
 				/*
@@ -298,7 +284,6 @@ public class JCoDemoConPoolNew {
 		/*
 		 * Die Funktionsparameter (IMPORT) der festlegen
 		 */
-		JCO.ParameterList input = function.getImportParameterList();
 		JCO.ParameterList export = function.getExportParameterList();
 
 				/*
@@ -361,7 +346,6 @@ public class JCoDemoConPoolNew {
 		/*
 		 * Die Funktionsparameter (IMPORT) der festlegen
 		 */
-		JCO.ParameterList input = function.getImportParameterList();
 		JCO.ParameterList export = function.getExportParameterList();
 
 				/*
