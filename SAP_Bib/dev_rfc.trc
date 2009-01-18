@@ -188,3 +188,28 @@ ERRNO       10054
 ERRNO TEXT  WSAECONNRESET: Connection reset by peer
 COUNTER     3
 
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:2256 Error in program 'javaw': ======> Syntaxfehler im Programm SAPLZZZ_BIB_FKT_GRUPPE                  .
+T:2256 Error in program 'javaw': <* RfcReceive [2] : returns 3:RFC_SYS_EXCEPTION
+T:2256 Error in program 'javaw': <* RfcCallReceive [2] : returns 3:RFC_SYS_EXCEPTION
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:4860 Error in program 'javaw': ======> Syntaxfehler im Programm SAPLZZZ_BIB_FKT_GRUPPE                  .
+T:4860 Error in program 'javaw': <* RfcReceive [2] : returns 3:RFC_SYS_EXCEPTION
+T:4860 Error in program 'javaw': <* RfcCallReceive [2] : returns 3:RFC_SYS_EXCEPTION
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:608 Error in program 'javaw': ======> Syntaxfehler im Programm SAPLZZZ_BIB_FKT_GRUPPE                  .
+T:608 Error in program 'javaw': <* RfcReceive [2] : returns 3:RFC_SYS_EXCEPTION
+T:608 Error in program 'javaw': <* RfcCallReceive [2] : returns 3:RFC_SYS_EXCEPTION
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:6104 Error in program 'javaw': ======> Syntaxfehler im Programm SAPLZZZ_BIB_FKT_GRUPPE                  .
+T:6104 Error in program 'javaw': <* RfcReceive [2] : returns 3:RFC_SYS_EXCEPTION
+T:6104 Error in program 'javaw': <* RfcCallReceive [2] : returns 3:RFC_SYS_EXCEPTION
+
+**** ERROR file opened at , SAP-REL 710,0,0 RFC-VER 3 880476 MT-SL
+T:5664 Error in program 'javaw': ======> Syntaxfehler im Programm SAPLZZZ_BIB_FKT_GRUPPE                  .
+T:5664 Error in program 'javaw': <* RfcReceive [2] : returns 3:RFC_SYS_EXCEPTION
+T:5664 Error in program 'javaw': <* RfcCallReceive [2] : returns 3:RFC_SYS_EXCEPTION

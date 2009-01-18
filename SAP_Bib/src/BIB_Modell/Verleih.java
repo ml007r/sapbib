@@ -10,7 +10,7 @@ public class Verleih {
 	private String rueckgabedatum;
 	private int derLeser;
 	private int dasBuch;
-	//private Date frist;
+	private boolean aktiv;
 	
 	
 	public Verleih(int id, String ausleihdatum, String rueckgabedatum,
@@ -23,6 +23,19 @@ public class Verleih {
 		this.dasBuch = dasBuch;
 //		this.frist = frist;
 		anzahlVerleihen++;
+		this.aktiv = true;
+	}
+	public Verleih(int id, String ausleihdatum, String rueckgabedatum,
+			int derLeser, int dasBuch, boolean aktiv) {
+		super();
+		this.id = id;
+		this.ausleihdatum = ausleihdatum;
+		this.rueckgabedatum = rueckgabedatum;
+		this.derLeser = derLeser;
+		this.dasBuch = dasBuch;
+//		this.frist = frist;
+		anzahlVerleihen++;
+		this.aktiv = aktiv;
 	}
 	
 	public static int getAnzahlVerleihen() {
