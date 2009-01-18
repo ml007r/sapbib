@@ -147,12 +147,12 @@ implements ActionListener, MouseListener, ListSelectionListener, Runnable, Table
         JMenuBar menuBar = new JMenuBar();
 
         JMenu menuDatei = new JMenu( "Datei" );
-        JMenuItem menuItemOeffnen = new JMenuItem( "Oeffnen" );
+        /*JMenuItem menuItemOeffnen = new JMenuItem( "Oeffnen" );
         menuItemOeffnen.addActionListener( this );
         menuDatei.add( menuItemOeffnen );
         JMenuItem menuItemSpeichern = new JMenuItem( "Speichern" );
         menuItemSpeichern.addActionListener( this );
-        menuDatei.add( menuItemSpeichern );
+        menuDatei.add( menuItemSpeichern );*/
         JMenuItem menuItemBeenden = new JMenuItem( "Beenden" );
         menuItemBeenden.addActionListener( this );
         menuDatei.add( menuItemBeenden );
@@ -536,10 +536,12 @@ public void refreshVerleihTable(ArrayList<Verleih> verleih){
 	    for ( Verleih ver : verleih )
 	    {
 	        if(ver.getId()!= 0 ){
-	        String[] hilfsString = {ver.getId()+"",ver.getDasBuch()+"",ver.getDerLeser()+"", ver.getAusleihdatum(), ver.getRueckgabedatum()};
-	        tmVerleih.insertRow(i, hilfsString);
-	    	i++;
-	        }
+	        	String[] hilfsString = { ver.getId() + "",
+					ver.getDasBuch() + "", ver.getDerLeser() + "",
+					ver.getAusleihdatum(), ver.getRueckgabedatum() };
+					tmVerleih.insertRow(i, hilfsString);
+					i++;
+			}
 	    }
 	    verleihListe.setModel( tmVerleih );
     }	
@@ -749,7 +751,7 @@ public void setController(BIB_Steuer controller) {
 				Buch hilfsBuch = this.controller.getBuchByID(ver.getDasBuch());
 				System.out.println("status von buch + " + buch + " geändert...");
 				this.controller.aendernBuchStatus(hilfsBuch);
-				
+				this.controller.getAlleVerleihen().remove(ver);				
 				this.refreshBuchTable(this.controller.getAlleBuecher());
 				this.refreshVerleihTable(this.controller.getAlleVerleihen());
 			}
