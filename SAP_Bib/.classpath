@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="D:/Studium/Entwicklung/SAP_Bib/src/sapidoc.jar"/>
-	<classpathentry kind="lib" path="D:/Studium/Entwicklung/SAP_Bib/src/sapjco.jar"/>
+	<classpathentry kind="lib" path="src/sapjco.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -849,7 +849,7 @@ public void setController(BIB_Steuer controller) {
 		}
 		else if("editLeser".equals(cmd)){
 			try {
-				System.out.println(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "");
+				//System.out.println(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "");
 				hilfsLeser = this.controller.getLeserByID((Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "")));
 				txtKdName.setText(hilfsLeser.getVorname());
 				txtKdNachname.setText(hilfsLeser.getNachname());
@@ -860,7 +860,7 @@ public void setController(BIB_Steuer controller) {
 				btnLeserAbort.setVisible(true);
 			} catch(Exception e1){
 	        	System.err.println(e1.getMessage());
-	        	new InfoFenster("Kein Leser vorhanden, dass du editieren könntest...du Vollidiot...");
+	        	new InfoFenster("Kein Leser vorhanden, den du editieren könntest...du Vollidiot...");
 	        }
 		}
 		else if("newLeser".equals(cmd)){
