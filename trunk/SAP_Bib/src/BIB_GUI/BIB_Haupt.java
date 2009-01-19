@@ -887,6 +887,10 @@ public void setController(BIB_Steuer controller) {
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 		}
 		
+	this.refreshBuchTable(this.controller.getAlleBuecher());
+	this.refreshLeserTable(this.controller.getAlleLeser());
+	this.refreshVerleihTable(this.controller.getAlleVerleihen());
+		
 	}
 
 	@Override
