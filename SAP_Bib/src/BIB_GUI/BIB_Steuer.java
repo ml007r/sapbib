@@ -137,6 +137,7 @@ public class BIB_Steuer implements Runnable{
 	
 	public void setLeser(int i,String vorname, String nachname, String strasse,
 			String plz, String ort){
+		
 		Leser les = this.getLeserByID(i);
 		// eine Instanz der Demo-Klasse erstellen
 		JCoDemoConPoolNew jcd = JCoDemoConPoolNew.getInstance();

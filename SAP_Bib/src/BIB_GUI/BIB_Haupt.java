@@ -575,7 +575,7 @@ public void setController(BIB_Steuer controller) {
 		System.out.println(e.getActionCommand());
 		
 		if("speichernBuch".equals(cmd)){
-			this.controller.setBuch((Integer.parseInt(tmBuch.getValueAt(buchListe.getSelectedRow(), 0) + "")),txtBuchISBN.getText(),txtBuchTitel.getText(),txtBuchAutor.getText(),
+			this.controller.setBuch(hilfsBuch.getId(),txtBuchISBN.getText(),txtBuchTitel.getText(),txtBuchAutor.getText(),
 					txtBuchBeschreibung.getText(), txtBuchVerlag.getText());
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 			txtBuchISBN.setText("");
@@ -719,8 +719,8 @@ public void setController(BIB_Steuer controller) {
 			this.refreshBuchTable(this.controller.getAlleBuecher());
 		}
 		else if("speichernLeser".equals(cmd)){
-			
-			this.controller.setLeser((Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "")),txtKdName.getText(),txtKdNachname.getText(),
+			//System.out.println("hier leser id : " +(Integer.parseInt(tmLeser.getValueAt(leserListe.getSelectedRow(), 0) + "")));
+			this.controller.setLeser(hilfsLeser.getId(),txtKdName.getText(),txtKdNachname.getText(),
 					txtKdStrasse.getText(),txtKdPLZ.getText(),txtKdOrt.getText());
 			txtKdNachname.setText("");
 			txtKdName.setText("");
