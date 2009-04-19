@@ -299,7 +299,6 @@ public class JCoDemoConPoolNew {
 			// Den EXPORT Wert "RETURN" als Double zurückgeben
 			
 			Table x = function.getTableParameterList().getTable("LESER");
-			//System.out.println(x);
 			x.firstRow();
 			leser.add(new Leser(x.getField("ID").getInt(),x.getField("VORNAME").getString(),x.getField("NAME").getString(),x.getField("STRASSE").getString(),x.getField("PLZ").getString(),x.getField("ORT").getString()));
 			while(x.nextRow()){
